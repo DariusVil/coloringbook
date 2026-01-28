@@ -14,7 +14,7 @@ from pydantic import BaseModel
 from openai import OpenAI
 
 # OpenAI configuration
-OPENAI_API_KEY = "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"
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 openai_client = OpenAI(api_key=OPENAI_API_KEY)
 
 app = FastAPI(
