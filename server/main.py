@@ -13,9 +13,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from openai import OpenAI
 
-# OpenAI configuration
-OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
-openai_client = OpenAI(api_key=OPENAI_API_KEY)
+# OpenAI configuration - reads OPENAI_API_KEY from environment automatically
+openai_client = OpenAI()
 
 app = FastAPI(
     title="Coloring Book API",
