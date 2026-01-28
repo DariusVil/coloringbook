@@ -26,8 +26,14 @@ app.add_middleware(
 )
 
 # Configuration
-# Use COLORINGBOOK_IMAGES_DIR env var for production, fallback to ./images for development
-IMAGES_DIR = Path(os.environ.get("COLORINGBOOK_IMAGES_DIR", Path(__file__).parent / "images"))
+# Priority: 1) /var/lib/coloringbook/images, 2) COLORINGBOOK_IMAGES_DIR env var, 3) ./images for development
+_PRODUCTION_PATH = Path("/var/lib/coloringbook/images")
+if _PRODUCTION_PATH.exists():
+    IMAGES_DIR = _PRODUCTION_PATH
+elif os.environ.get("COLORINGBOOK_IMAGES_DIR"):
+    IMAGES_DIR = Path(os.environ["COLORINGBOOK_IMAGES_DIR"])
+else:
+    IMAGES_DIR = Path(__file__).parent / "images"
 SUPPORTED_EXTENSIONS = {".png", ".jpg", ".jpeg", ".pdf"}
 
 
