@@ -7,6 +7,7 @@ import SwiftUI
 final class ImageGalleryViewModel {
     private(set) var images: [ColoringImage] = []
     private(set) var isLoading = false
+    private(set) var isGenerating = false
     private(set) var errorMessage: String?
 
     private let imageService = ImageService()
@@ -43,5 +44,20 @@ final class ImageGalleryViewModel {
         } catch {
             return false
         }
+    }
+
+    func generateImage(prompt: String) async {
+        isGenerating = true
+        errorMessage = nil
+
+        do {
+            let newImage = try await imageService.generateImage(prompt: prompt, baseURL: serverURL)
+            images.append(newImage)
+            images.sort { $0.filename < $1.filename }
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+
+        isGenerating = false
     }
 }

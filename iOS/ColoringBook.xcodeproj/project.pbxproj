@@ -16,6 +16,7 @@
 		A10000000000000000000007 /* ImageDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000007 /* ImageDetailView.swift */; };
 		A10000000000000000000008 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000008 /* SettingsView.swift */; };
 		A10000000000000000000009 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000009 /* Assets.xcassets */; };
+		A10000000000000000000010 /* GenerateImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000010 /* GenerateImageView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		A20000000000000000000007 /* ImageDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDetailView.swift; sourceTree = "<group>"; };
 		A20000000000000000000008 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		A20000000000000000000009 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A20000000000000000000010 /* GenerateImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateImageView.swift; sourceTree = "<group>"; };
 		A30000000000000000000001 /* ColoringBook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ColoringBook.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -61,6 +63,7 @@
 				A20000000000000000000006 /* ImageGalleryView.swift */,
 				A20000000000000000000007 /* ImageDetailView.swift */,
 				A20000000000000000000008 /* SettingsView.swift */,
+				A20000000000000000000010 /* GenerateImageView.swift */,
 				A20000000000000000000009 /* Assets.xcassets */,
 			);
 			path = ColoringBook;
@@ -151,6 +154,7 @@
 				A10000000000000000000006 /* ImageGalleryView.swift in Sources */,
 				A10000000000000000000007 /* ImageDetailView.swift in Sources */,
 				A10000000000000000000008 /* SettingsView.swift in Sources */,
+				A10000000000000000000010 /* GenerateImageView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

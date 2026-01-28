@@ -4,6 +4,7 @@ import SwiftUI
 struct ImageGalleryView: View {
     @State private var viewModel = ImageGalleryViewModel()
     @State private var showingSettings = false
+    @State private var showingGenerate = false
 
     private let columns = [
         GridItem(.adaptive(minimum: 150, maximum: 200), spacing: 16)
@@ -25,10 +26,18 @@ struct ImageGalleryView: View {
             .navigationTitle("Coloring Book")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        showingSettings = true
-                    } label: {
-                        Image(systemName: "gear")
+                    HStack(spacing: 16) {
+                        Button {
+                            showingGenerate = true
+                        } label: {
+                            Image(systemName: "wand.and.stars")
+                        }
+
+                        Button {
+                            showingSettings = true
+                        } label: {
+                            Image(systemName: "gear")
+                        }
                     }
                 }
             }
@@ -40,6 +49,9 @@ struct ImageGalleryView: View {
             }
             .sheet(isPresented: $showingSettings) {
                 SettingsView(viewModel: viewModel)
+            }
+            .sheet(isPresented: $showingGenerate) {
+                GenerateImageView(viewModel: viewModel)
             }
         }
     }
