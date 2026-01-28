@@ -1,6 +1,3 @@
-#if canImport(UIKit)
-import UIKit
-#endif
 import SwiftUI
 
 /// Settings view for configuring server URL

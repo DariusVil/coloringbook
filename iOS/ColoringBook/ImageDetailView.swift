@@ -1,8 +1,5 @@
 import SwiftUI
-
-#if canImport(UIKit)
 import UIKit
-#endif
 
 /// Full-screen view of a single coloring image with print capability
 struct ImageDetailView: View {
@@ -11,9 +8,7 @@ struct ImageDetailView: View {
 
     @State private var scale: CGFloat = 1.0
     @State private var lastScale: CGFloat = 1.0
-    #if canImport(UIKit)
     @State private var loadedImage: UIImage?
-    #endif
     @State private var isLoading = true
     @State private var showingPrintError = false
 
@@ -58,7 +53,6 @@ struct ImageDetailView: View {
         .navigationTitle(image.title)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            #if canImport(UIKit)
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
                     printCurrentImage()
@@ -67,7 +61,6 @@ struct ImageDetailView: View {
                 }
                 .disabled(loadedImage == nil || !printService.isPrintingAvailable)
             }
-            #endif
 
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
@@ -103,7 +96,6 @@ struct ImageDetailView: View {
     }
 
     private func loadUIImage(from url: URL) {
-        #if canImport(UIKit)
         Task {
             do {
                 let (data, _) = try await URLSession.shared.data(from: url)
@@ -116,10 +108,8 @@ struct ImageDetailView: View {
                 print("Failed to load UIImage: \(error)")
             }
         }
-        #endif
     }
 
-    #if canImport(UIKit)
     private func printCurrentImage() {
         guard let image = loadedImage else {
             showingPrintError = true
@@ -130,7 +120,6 @@ struct ImageDetailView: View {
             showingPrintError = true
         }
     }
-    #endif
 }
 
 #Preview {

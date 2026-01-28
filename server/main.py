@@ -26,7 +26,8 @@ app.add_middleware(
 )
 
 # Configuration
-IMAGES_DIR = Path(__file__).parent / "images"
+# Use COLORINGBOOK_IMAGES_DIR env var for production, fallback to ./images for development
+IMAGES_DIR = Path(os.environ.get("COLORINGBOOK_IMAGES_DIR", Path(__file__).parent / "images"))
 SUPPORTED_EXTENSIONS = {".png", ".jpg", ".jpeg", ".pdf"}
 
 

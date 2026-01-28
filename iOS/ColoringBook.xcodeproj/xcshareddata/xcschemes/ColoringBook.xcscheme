@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1630"
+   LastUpgradeVersion = "1540"
    version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -15,7 +15,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "8B41F6442DEDD0D5001A66F9"
+               BlueprintIdentifier = "A60000000000000000000001"
                BuildableName = "ColoringBook.app"
                BlueprintName = "ColoringBook"
                ReferencedContainer = "container:ColoringBook.xcodeproj">
@@ -27,28 +27,8 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES">
-      <TestPlans>
-         <TestPlanReference
-            reference = "container:ColoringBook.xctestplan">
-         </TestPlanReference>
-         <TestPlanReference
-            reference = "container:ColoringBook/ColoringBook.xctestplan"
-            default = "YES">
-         </TestPlanReference>
-      </TestPlans>
-      <Testables>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "8B41F65B2DEDD0D6001A66F9"
-               BuildableName = "ColoringBook.xctest"
-               BlueprintName = "ColoringBookUITests"
-               ReferencedContainer = "container:ColoringBook.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-      </Testables>
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      shouldAutocreateTestPlan = "YES">
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -64,7 +44,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "8B41F6442DEDD0D5001A66F9"
+            BlueprintIdentifier = "A60000000000000000000001"
             BuildableName = "ColoringBook.app"
             BlueprintName = "ColoringBook"
             ReferencedContainer = "container:ColoringBook.xcodeproj">
@@ -81,7 +61,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "8B41F6442DEDD0D5001A66F9"
+            BlueprintIdentifier = "A60000000000000000000001"
             BuildableName = "ColoringBook.app"
             BlueprintName = "ColoringBook"
             ReferencedContainer = "container:ColoringBook.xcodeproj">

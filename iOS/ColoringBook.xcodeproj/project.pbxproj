@@ -3,244 +3,161 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 77;
+	objectVersion = 56;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8B41F6832DEDD23B001A66F9 /* ColoringBookFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 8B41F6822DEDD23B001A66F9 /* ColoringBookFeature */; };
-		8B41F6852DEDD25C001A66F9 /* ColoringBookFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 8B41F6842DEDD25C001A66F9 /* ColoringBookFeature */; };
+		A10000000000000000000001 /* ColoringBookApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000001 /* ColoringBookApp.swift */; };
+		A10000000000000000000002 /* ColoringImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000002 /* ColoringImage.swift */; };
+		A10000000000000000000003 /* ImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000003 /* ImageService.swift */; };
+		A10000000000000000000004 /* PrintService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000004 /* PrintService.swift */; };
+		A10000000000000000000005 /* ImageGalleryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000005 /* ImageGalleryViewModel.swift */; };
+		A10000000000000000000006 /* ImageGalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000006 /* ImageGalleryView.swift */; };
+		A10000000000000000000007 /* ImageDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000007 /* ImageDetailView.swift */; };
+		A10000000000000000000008 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000008 /* SettingsView.swift */; };
+		A10000000000000000000009 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000009 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		8B41F65D2DEDD0D6001A66F9 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 8B41F63D2DEDD0D5001A66F9 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 8B41F6442DEDD0D5001A66F9;
-			remoteInfo = ColoringBook;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
-		8B41F6452DEDD0D5001A66F9 /* ColoringBook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ColoringBook.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		8B41F65C2DEDD0D6001A66F9 /* ColoringBook.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ColoringBook.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A20000000000000000000001 /* ColoringBookApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColoringBookApp.swift; sourceTree = "<group>"; };
+		A20000000000000000000002 /* ColoringImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColoringImage.swift; sourceTree = "<group>"; };
+		A20000000000000000000003 /* ImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageService.swift; sourceTree = "<group>"; };
+		A20000000000000000000004 /* PrintService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrintService.swift; sourceTree = "<group>"; };
+		A20000000000000000000005 /* ImageGalleryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageGalleryViewModel.swift; sourceTree = "<group>"; };
+		A20000000000000000000006 /* ImageGalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageGalleryView.swift; sourceTree = "<group>"; };
+		A20000000000000000000007 /* ImageDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDetailView.swift; sourceTree = "<group>"; };
+		A20000000000000000000008 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		A20000000000000000000009 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A30000000000000000000001 /* ColoringBook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ColoringBook.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		8BD71C0A2DEE41E000CEDD92 /* Exceptions for "Config" folder in "ColoringBook" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Debug.xcconfig,
-				Release.xcconfig,
-				Shared.xcconfig,
-				Tests.xcconfig,
-			);
-			target = 8B41F6442DEDD0D5001A66F9 /* ColoringBook */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		8B41F6472DEDD0D5001A66F9 /* ColoringBook */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = ColoringBook;
-			sourceTree = "<group>";
-		};
-		8B41F65F2DEDD0D6001A66F9 /* ColoringBookUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = ColoringBookUITests;
-			sourceTree = "<group>";
-		};
-		8BD71C052DEE41D800CEDD92 /* Config */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				8BD71C0A2DEE41E000CEDD92 /* Exceptions for "Config" folder in "ColoringBook" target */,
-			);
-			path = Config;
-			sourceTree = "<group>";
-		};
-/* End PBXFileSystemSynchronizedRootGroup section */
-
 /* Begin PBXFrameworksBuildPhase section */
-		8B41F6422DEDD0D5001A66F9 /* Frameworks */ = {
+		A40000000000000000000001 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8B41F6852DEDD25C001A66F9 /* ColoringBookFeature in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		8B41F6592DEDD0D6001A66F9 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				8B41F6832DEDD23B001A66F9 /* ColoringBookFeature in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		8B41F63C2DEDD0D5001A66F9 = {
+		A50000000000000000000001 = {
 			isa = PBXGroup;
 			children = (
-				8BD71C052DEE41D800CEDD92 /* Config */,
-				8B41F6472DEDD0D5001A66F9 /* ColoringBook */,
-				8B41F65F2DEDD0D6001A66F9 /* ColoringBookUITests */,
-				8B41F6812DEDD23B001A66F9 /* Frameworks */,
-				8B41F6462DEDD0D5001A66F9 /* Products */,
+				A50000000000000000000002 /* ColoringBook */,
+				A50000000000000000000003 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		8B41F6462DEDD0D5001A66F9 /* Products */ = {
+		A50000000000000000000002 /* ColoringBook */ = {
 			isa = PBXGroup;
 			children = (
-				8B41F6452DEDD0D5001A66F9 /* ColoringBook.app */,
-				8B41F65C2DEDD0D6001A66F9 /* ColoringBook.xctest */,
+				A20000000000000000000001 /* ColoringBookApp.swift */,
+				A20000000000000000000002 /* ColoringImage.swift */,
+				A20000000000000000000003 /* ImageService.swift */,
+				A20000000000000000000004 /* PrintService.swift */,
+				A20000000000000000000005 /* ImageGalleryViewModel.swift */,
+				A20000000000000000000006 /* ImageGalleryView.swift */,
+				A20000000000000000000007 /* ImageDetailView.swift */,
+				A20000000000000000000008 /* SettingsView.swift */,
+				A20000000000000000000009 /* Assets.xcassets */,
+			);
+			path = ColoringBook;
+			sourceTree = "<group>";
+		};
+		A50000000000000000000003 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A30000000000000000000001 /* ColoringBook.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		8B41F6812DEDD23B001A66F9 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		8B41F6442DEDD0D5001A66F9 /* ColoringBook */ = {
+		A60000000000000000000001 /* ColoringBook */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 8B41F6662DEDD0D6001A66F9 /* Build configuration list for PBXNativeTarget "ColoringBook" */;
+			buildConfigurationList = A80000000000000000000001 /* Build configuration list for PBXNativeTarget "ColoringBook" */;
 			buildPhases = (
-				8B41F6412DEDD0D5001A66F9 /* Sources */,
-				8B41F6422DEDD0D5001A66F9 /* Frameworks */,
-				8B41F6432DEDD0D5001A66F9 /* Resources */,
+				A70000000000000000000001 /* Sources */,
+				A40000000000000000000001 /* Frameworks */,
+				A70000000000000000000002 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				8B41F6472DEDD0D5001A66F9 /* ColoringBook */,
-				8BD71C052DEE41D800CEDD92 /* Config */,
 			);
 			name = ColoringBook;
-			packageProductDependencies = (
-				8B41F6842DEDD25C001A66F9 /* ColoringBookFeature */,
-			);
 			productName = ColoringBook;
-			productReference = 8B41F6452DEDD0D5001A66F9 /* ColoringBook.app */;
+			productReference = A30000000000000000000001 /* ColoringBook.app */;
 			productType = "com.apple.product-type.application";
-		};
-		8B41F65B2DEDD0D6001A66F9 /* ColoringBookUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 8B41F66C2DEDD0D6001A66F9 /* Build configuration list for PBXNativeTarget "ColoringBookUITests" */;
-			buildPhases = (
-				8B41F6582DEDD0D6001A66F9 /* Sources */,
-				8B41F6592DEDD0D6001A66F9 /* Frameworks */,
-				8B41F65A2DEDD0D6001A66F9 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				8B41F65E2DEDD0D6001A66F9 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				8B41F65F2DEDD0D6001A66F9 /* ColoringBookUITests */,
-			);
-			name = ColoringBookUITests;
-			packageProductDependencies = (
-				8B41F6822DEDD23B001A66F9 /* ColoringBookFeature */,
-			);
-			productName = ColoringBookUITests;
-			productReference = 8B41F65C2DEDD0D6001A66F9 /* ColoringBook.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		8B41F63D2DEDD0D5001A66F9 /* Project object */ = {
+		A90000000000000000000001 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1630;
-				LastUpgradeCheck = 1630;
+				LastSwiftUpdateCheck = 1540;
+				LastUpgradeCheck = 1540;
 				TargetAttributes = {
-					8B41F6442DEDD0D5001A66F9 = {
-						CreatedOnToolsVersion = 16.3;
-					};
-					8B41F65B2DEDD0D6001A66F9 = {
-						CreatedOnToolsVersion = 16.3;
-						TestTargetID = 8B41F6442DEDD0D5001A66F9;
+					A60000000000000000000001 = {
+						CreatedOnToolsVersion = 15.4;
 					};
 				};
 			};
-			buildConfigurationList = 8B41F6402DEDD0D5001A66F9 /* Build configuration list for PBXProject "ColoringBook" */;
+			buildConfigurationList = A80000000000000000000002 /* Build configuration list for PBXProject "ColoringBook" */;
+			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
 			);
-			mainGroup = 8B41F63C2DEDD0D5001A66F9;
-			minimizedProjectReferenceProxies = 1;
-			preferredProjectObjectVersion = 77;
-			productRefGroup = 8B41F6462DEDD0D5001A66F9 /* Products */;
+			mainGroup = A50000000000000000000001;
+			productRefGroup = A50000000000000000000003 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				8B41F6442DEDD0D5001A66F9 /* ColoringBook */,
-				8B41F65B2DEDD0D6001A66F9 /* ColoringBookUITests */,
+				A60000000000000000000001 /* ColoringBook */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		8B41F6432DEDD0D5001A66F9 /* Resources */ = {
+		A70000000000000000000002 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		8B41F65A2DEDD0D6001A66F9 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
+				A10000000000000000000009 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		8B41F6412DEDD0D5001A66F9 /* Sources */ = {
+		A70000000000000000000001 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		8B41F6582DEDD0D6001A66F9 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
+				A10000000000000000000001 /* ColoringBookApp.swift in Sources */,
+				A10000000000000000000002 /* ColoringImage.swift in Sources */,
+				A10000000000000000000003 /* ImageService.swift in Sources */,
+				A10000000000000000000004 /* PrintService.swift in Sources */,
+				A10000000000000000000005 /* ImageGalleryViewModel.swift in Sources */,
+				A10000000000000000000006 /* ImageGalleryView.swift in Sources */,
+				A10000000000000000000007 /* ImageDetailView.swift in Sources */,
+				A10000000000000000000008 /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		8B41F65E2DEDD0D6001A66F9 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 8B41F6442DEDD0D5001A66F9 /* ColoringBook */;
-			targetProxy = 8B41F65D2DEDD0D6001A66F9 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin XCBuildConfiguration section */
-		8B41F6642DEDD0D6001A66F9 /* Debug */ = {
+		B10000000000000000000001 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -292,7 +209,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -300,11 +217,10 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
-		8B41F6652DEDD0D6001A66F9 /* Release */ = {
+		B10000000000000000000002 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -350,133 +266,96 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_VERSION = 5.0;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
-		8B41F6672DEDD0D6001A66F9 /* Debug */ = {
+		B20000000000000000000001 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = 8BD71C052DEE41D800CEDD92 /* Config */;
-			baseConfigurationReferenceRelativePath = Debug.xcconfig;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = M5PNX43K4J;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_DISPLAY_NAME)";
+				INFOPLIST_KEY_CFBundleDisplayName = "Coloring Book";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = coloringbook.brerum.com;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
-		8B41F6682DEDD0D6001A66F9 /* Release */ = {
+		B20000000000000000000002 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = 8BD71C052DEE41D800CEDD92 /* Config */;
-			baseConfigurationReferenceRelativePath = Release.xcconfig;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = M5PNX43K4J;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_DISPLAY_NAME)";
+				INFOPLIST_KEY_CFBundleDisplayName = "Coloring Book";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = coloringbook.brerum.com;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-			};
-			name = Release;
-		};
-		8B41F66D2DEDD0D6001A66F9 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = 8BD71C052DEE41D800CEDD92 /* Config */;
-			baseConfigurationReferenceRelativePath = Tests.xcconfig;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				GENERATE_INFOPLIST_FILE = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = ColoringBook;
-			};
-			name = Debug;
-		};
-		8B41F66E2DEDD0D6001A66F9 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = 8BD71C052DEE41D800CEDD92 /* Config */;
-			baseConfigurationReferenceRelativePath = Tests.xcconfig;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				GENERATE_INFOPLIST_FILE = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = ColoringBook;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		8B41F6402DEDD0D5001A66F9 /* Build configuration list for PBXProject "ColoringBook" */ = {
+		A80000000000000000000001 /* Build configuration list for PBXNativeTarget "ColoringBook" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				8B41F6642DEDD0D6001A66F9 /* Debug */,
-				8B41F6652DEDD0D6001A66F9 /* Release */,
+				B20000000000000000000001 /* Debug */,
+				B20000000000000000000002 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		8B41F6662DEDD0D6001A66F9 /* Build configuration list for PBXNativeTarget "ColoringBook" */ = {
+		A80000000000000000000002 /* Build configuration list for PBXProject "ColoringBook" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				8B41F6672DEDD0D6001A66F9 /* Debug */,
-				8B41F6682DEDD0D6001A66F9 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		8B41F66C2DEDD0D6001A66F9 /* Build configuration list for PBXNativeTarget "ColoringBookUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				8B41F66D2DEDD0D6001A66F9 /* Debug */,
-				8B41F66E2DEDD0D6001A66F9 /* Release */,
+				B10000000000000000000001 /* Debug */,
+				B10000000000000000000002 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		8B41F6822DEDD23B001A66F9 /* ColoringBookFeature */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = ColoringBookFeature;
-		};
-		8B41F6842DEDD25C001A66F9 /* ColoringBookFeature */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = ColoringBookFeature;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
-	rootObject = 8B41F63D2DEDD0D5001A66F9 /* Project object */;
+	rootObject = A90000000000000000000001 /* Project object */;
 }

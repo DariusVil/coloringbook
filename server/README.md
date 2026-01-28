@@ -12,6 +12,8 @@ pip install -r requirements.txt
 uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
+cloudflared tunnel run 5a9824d6-2cec-4b5e-8e9f-7252972bc109
+
 ## API Endpoints
 
 - `GET /api/health` - Health check
@@ -21,9 +23,19 @@ uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 
 ## Adding Images
 
-Place PNG, JPG, or PDF files in the `images/` directory. The filename (without extension) becomes the image ID and title.
+Place PNG, JPG, or PDF files in the images directory. The filename (without extension) becomes the image ID and title.
 
 Example: `unicorn-rainbow.png` → Title: "Unicorn Rainbow"
+
+### Image Storage Configuration
+
+By default, images are served from `./images/` (relative to main.py). For production, set the `COLORINGBOOK_IMAGES_DIR` environment variable to use a persistent directory outside the git repo:
+
+```bash
+export COLORINGBOOK_IMAGES_DIR=/var/lib/coloringbook/images
+```
+
+This keeps user/AI-generated images separate from the code, so deploys won't overwrite them.
 
 ## Testing
 
@@ -79,11 +91,28 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-#### Add Your Images
+#### Set Up Persistent Image Storage
+
+Create a separate directory for images that persists across deploys:
 
 ```bash
-# Copy your coloring images to the images directory
-cp /path/to/your/images/*.png /opt/coloringbook/images/
+# Create persistent data directory
+sudo mkdir -p /var/lib/coloringbook/images
+sudo chown www-data:www-data /var/lib/coloringbook/images
+
+# Copy your coloring images
+sudo cp /path/to/your/images/*.png /var/lib/coloringbook/images/
+```
+
+**Directory structure:**
+```
+/opt/coloringbook/           # App code (from git, replaceable)
+    main.py
+    requirements.txt
+    images/                  # Sample images for dev only (in git)
+
+/var/lib/coloringbook/       # Persistent data (NOT in git)
+    images/                  # User + AI-generated images
 ```
 
 ### 2. Create a Systemd Service
@@ -107,6 +136,7 @@ User=www-data
 Group=www-data
 WorkingDirectory=/opt/coloringbook
 Environment="PATH=/opt/coloringbook/venv/bin"
+Environment="COLORINGBOOK_IMAGES_DIR=/var/lib/coloringbook/images"
 ExecStart=/opt/coloringbook/venv/bin/uvicorn main:app --host 127.0.0.1 --port 8000
 Restart=always
 RestartSec=5
@@ -118,8 +148,11 @@ WantedBy=multi-user.target
 Set permissions and enable the service:
 
 ```bash
-# Set ownership
+# Set ownership for app code
 sudo chown -R www-data:www-data /opt/coloringbook
+
+# Set ownership for persistent images
+sudo chown -R www-data:www-data /var/lib/coloringbook
 
 # Reload systemd and enable service
 sudo systemctl daemon-reload
@@ -166,18 +199,18 @@ cloudflared tunnel create coloringbook
 
 5. Configure the tunnel - create `/etc/cloudflared/config.yml`:
 ```yaml
-tunnel: <TUNNEL_ID>
-credentials-file: /root/.cloudflared/<TUNNEL_ID>.json
+tunnel: 5a9824d6-2cec-4b5e-8e9f-7252972bc109
+credentials-file: /root/.cloudflared/5a9824d6-2cec-4b5e-8e9f-7252972bc109.json
 
 ingress:
-  - hostname: coloringbook.yourdomain.com
+  - hostname: coloringbook.brerum.com
     service: http://localhost:8000
   - service: http_status:404
 ```
 
 6. Route DNS:
 ```bash
-cloudflared tunnel route dns coloringbook coloringbook.yourdomain.com
+cloudflared tunnel route dns coloringbook coloringbook.brerum.com
 ```
 
 7. Run as a service:

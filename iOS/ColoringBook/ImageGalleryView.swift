@@ -1,10 +1,7 @@
-#if canImport(UIKit)
-import UIKit
-#endif
 import SwiftUI
 
 /// Main gallery view showing a grid of coloring images
-public struct ImageGalleryView: View {
+struct ImageGalleryView: View {
     @State private var viewModel = ImageGalleryViewModel()
     @State private var showingSettings = false
 
@@ -12,9 +9,7 @@ public struct ImageGalleryView: View {
         GridItem(.adaptive(minimum: 150, maximum: 200), spacing: 16)
     ]
 
-    public init() {}
-
-    public var body: some View {
+    var body: some View {
         NavigationStack {
             Group {
                 if viewModel.isLoading && viewModel.images.isEmpty {

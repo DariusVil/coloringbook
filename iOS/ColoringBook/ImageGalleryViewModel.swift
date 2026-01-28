@@ -17,7 +17,7 @@ final class ImageGalleryViewModel {
                let url = URL(string: urlString) {
                 return url
             }
-            return URL(string: "http://localhost:8000")!
+            return URL(string: "https://coloringbook.brerum.com")!
         }
         set {
             UserDefaults.standard.set(newValue.absoluteString, forKey: "serverURL")

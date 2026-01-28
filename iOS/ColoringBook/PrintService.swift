@@ -1,6 +1,4 @@
 import SwiftUI
-
-#if canImport(UIKit)
 import UIKit
 
 /// Service for printing coloring images via AirPrint
@@ -8,10 +6,6 @@ import UIKit
 final class PrintService {
 
     /// Presents the print dialog for a given image
-    /// - Parameters:
-    ///   - image: The UIImage to print
-    ///   - title: Job name for the print queue
-    /// - Returns: True if printing was initiated successfully
     @discardableResult
     func printImage(_ image: UIImage, title: String) -> Bool {
         guard UIPrintInteractionController.isPrintingAvailable else {
@@ -42,15 +36,3 @@ final class PrintService {
         UIPrintInteractionController.isPrintingAvailable
     }
 }
-
-#else
-
-/// Stub for non-UIKit platforms
-@MainActor
-final class PrintService {
-    @discardableResult
-    func printImage(_ image: Any, title: String) -> Bool { false }
-    var isPrintingAvailable: Bool { false }
-}
-
-#endif
