@@ -4,7 +4,7 @@ name="cloudflared"
 description="Cloudflare Tunnel"
 
 command="/usr/bin/cloudflared"
-command_args="tunnel run"
+command_args="tunnel --config /root/.cloudflared/config.yml run"
 command_background=true
 pidfile="/run/${RC_SVCNAME}.pid"
 output_log="/var/log/cloudflared.log"
