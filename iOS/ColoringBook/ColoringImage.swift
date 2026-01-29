@@ -6,10 +6,19 @@ struct ColoringImage: Codable, Identifiable, Hashable, Sendable {
     let filename: String
     let title: String
     let url: String
+    let thumbnailUrl: String?
 
     /// Full URL for loading the image from the server
     func fullURL(baseURL: URL) -> URL? {
         URL(string: url, relativeTo: baseURL)
+    }
+
+    /// Thumbnail URL for gallery view, falls back to full URL if no thumbnail
+    func thumbnailFullURL(baseURL: URL) -> URL? {
+        if let thumbnailUrl {
+            return URL(string: thumbnailUrl, relativeTo: baseURL)
+        }
+        return fullURL(baseURL: baseURL)
     }
 }
 

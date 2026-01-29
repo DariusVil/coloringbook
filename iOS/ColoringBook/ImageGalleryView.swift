@@ -132,7 +132,7 @@ struct ImageThumbnailView: View {
 
     var body: some View {
         VStack {
-            if let url = image.fullURL(baseURL: baseURL) {
+            if let url = image.thumbnailFullURL(baseURL: baseURL) {
                 AsyncImage(url: url) { phase in
                     switch phase {
                     case .empty:

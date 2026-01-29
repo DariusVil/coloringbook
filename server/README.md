@@ -9,7 +9,7 @@ cd server
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
-uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+OPENAI_API_KEY="" uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
 cloudflared tunnel run 5a9824d6-2cec-4b5e-8e9f-7252972bc109
