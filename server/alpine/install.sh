@@ -1,38 +1,36 @@
 #!/bin/sh
 # Alpine Linux installation script for ColoringBook server
-# Run as root: sh install.sh
+# Run as root from /root/ColoringBook/server directory
 
 set -e
 
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+SERVER_DIR="$(dirname "$SCRIPT_DIR")"
+
 echo "==> Installing dependencies..."
 apk update
-apk add python3 py3-pip py3-virtualenv git cloudflared
+apk add python3 py3-pip py3-virtualenv cloudflared
 
-echo "==> Creating directories..."
-mkdir -p /opt/coloringbook
+echo "==> Creating images directory..."
 mkdir -p /var/lib/coloringbook/images
 
-echo "==> Copying application files..."
-cp main.py /opt/coloringbook/
-cp requirements.txt /opt/coloringbook/
-
 echo "==> Copying sample images..."
-cp -r images/* /var/lib/coloringbook/images/ 2>/dev/null || true
+cp -r "$SERVER_DIR/images/"* /var/lib/coloringbook/images/ 2>/dev/null || true
 
 echo "==> Setting up Python virtual environment..."
-cd /opt/coloringbook
+cd "$SERVER_DIR"
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 
 echo "==> Installing OpenRC services..."
-cp /opt/coloringbook/alpine/coloringbook /etc/init.d/coloringbook
-cp /opt/coloringbook/alpine/cloudflared /etc/init.d/cloudflared
+cp "$SCRIPT_DIR/coloringbook" /etc/init.d/coloringbook
+cp "$SCRIPT_DIR/cloudflared" /etc/init.d/cloudflared
 chmod +x /etc/init.d/coloringbook
 chmod +x /etc/init.d/cloudflared
 
 echo "==> Installing configuration..."
-cp /opt/coloringbook/alpine/coloringbook.conf /etc/conf.d/coloringbook
+cp "$SCRIPT_DIR/coloringbook.conf" /etc/conf.d/coloringbook
 
 echo "==> Enabling services to start on boot..."
 rc-update add coloringbook default
