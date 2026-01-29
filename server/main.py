@@ -3,11 +3,14 @@ Kids Coloring Image Browser - Backend API
 FastAPI server that serves coloring images from the images/ directory.
 """
 
+import json
 import os
-import re
 import httpx
+import uuid
+from datetime import datetime, timezone
 from pathlib import Path
-from fastapi import FastAPI, HTTPException
+from typing import Optional
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -42,6 +45,7 @@ elif os.environ.get("COLORINGBOOK_IMAGES_DIR"):
 else:
     IMAGES_DIR = Path(__file__).parent / "images"
 THUMBNAILS_DIR = IMAGES_DIR / "thumbnails"
+METADATA_FILE = IMAGES_DIR / "metadata.json"
 THUMBNAIL_SIZE = (400, 400)
 SUPPORTED_EXTENSIONS = {".png", ".jpg", ".jpeg", ".pdf"}
 
@@ -50,8 +54,10 @@ class ColoringImage(BaseModel):
     id: str
     filename: str
     title: str
+    prompt: Optional[str] = None
     url: str
-    thumbnailUrl: str | None = None
+    thumbnailUrl: Optional[str] = None
+    created: Optional[str] = None
 
 
 class ImagesResponse(BaseModel):
@@ -71,14 +77,36 @@ class GenerateImageResponse(BaseModel):
     image: ColoringImage
 
 
-def get_image_title(filename: str) -> str:
-    """Convert filename to display title."""
-    name = Path(filename).stem
-    # Replace hyphens/underscores with spaces and title case
-    return name.replace("-", " ").replace("_", " ").title()
+class SearchResponse(BaseModel):
+    images: list[ColoringImage]
+    query: str
+    total: int
 
 
-def ensure_thumbnail(image_path: Path) -> str | None:
+def load_metadata() -> dict:
+    """Load metadata from JSON file."""
+    if METADATA_FILE.exists():
+        try:
+            with open(METADATA_FILE, "r") as f:
+                return json.load(f)
+        except (json.JSONDecodeError, IOError):
+            return {}
+    return {}
+
+
+def save_metadata(metadata: dict) -> None:
+    """Save metadata to JSON file."""
+    IMAGES_DIR.mkdir(parents=True, exist_ok=True)
+    with open(METADATA_FILE, "w") as f:
+        json.dump(metadata, f, indent=2)
+
+
+def get_image_title(prompt: str) -> str:
+    """Convert prompt to display title."""
+    return prompt.strip().title()
+
+
+def ensure_thumbnail(image_path: Path) -> Optional[str]:
     """Generate thumbnail if needed, return thumbnail URL or None."""
     if image_path.suffix.lower() == ".pdf":
         return None  # Skip PDFs for now
@@ -114,49 +142,97 @@ def ensure_thumbnail(image_path: Path) -> str | None:
     return f"/thumbnails/{image_path.name}"
 
 
+def migrate_legacy_images(metadata: dict) -> dict:
+    """Add any images on disk that aren't in metadata (legacy migration)."""
+    if not IMAGES_DIR.exists():
+        return metadata
+
+    changed = False
+    for file_path in IMAGES_DIR.iterdir():
+        if file_path.is_file() and file_path.suffix.lower() in SUPPORTED_EXTENSIONS:
+            image_id = file_path.stem
+            if image_id not in metadata:
+                # Legacy image without metadata - create entry from filename
+                legacy_title = image_id.replace("-", " ").replace("_", " ").title()
+                metadata[image_id] = {
+                    "filename": file_path.name,
+                    "prompt": legacy_title,  # Use title as prompt for legacy images
+                    "title": legacy_title,
+                    "created": datetime.fromtimestamp(
+                        file_path.stat().st_mtime, tz=timezone.utc
+                    ).isoformat()
+                }
+                changed = True
+
+    if changed:
+        save_metadata(metadata)
+
+    return metadata
+
+
+def build_coloring_image(image_id: str, meta: dict) -> Optional[ColoringImage]:
+    """Build a ColoringImage from metadata, ensuring file exists."""
+    file_path = IMAGES_DIR / meta["filename"]
+    if not file_path.exists():
+        return None
+
+    thumbnail_url = ensure_thumbnail(file_path)
+    return ColoringImage(
+        id=image_id,
+        filename=meta["filename"],
+        title=meta.get("title", meta.get("prompt", image_id)),
+        prompt=meta.get("prompt"),
+        url=f"/images/{meta['filename']}",
+        thumbnailUrl=thumbnail_url,
+        created=meta.get("created")
+    )
+
+
 @app.get("/api/health", response_model=HealthResponse)
 async def health_check():
     """Health check endpoint."""
-    images = list(IMAGES_DIR.glob("*"))
-    image_count = sum(1 for f in images if f.suffix.lower() in SUPPORTED_EXTENSIONS)
-    return HealthResponse(status="healthy", images_count=image_count)
+    metadata = load_metadata()
+    return HealthResponse(status="healthy", images_count=len(metadata))
 
 
 @app.get("/api/images", response_model=ImagesResponse)
-async def list_images(request_host: str = None):
+async def list_images():
     """List all available coloring images."""
-    from starlette.requests import Request
-    images = []
-
     if not IMAGES_DIR.exists():
         IMAGES_DIR.mkdir(parents=True, exist_ok=True)
 
-    for file_path in sorted(IMAGES_DIR.iterdir()):
-        if file_path.is_file() and file_path.suffix.lower() in SUPPORTED_EXTENSIONS:
-            image_id = file_path.stem
-            thumbnail_url = ensure_thumbnail(file_path)
-            images.append(ColoringImage(
-                id=image_id,
-                filename=file_path.name,
-                title=get_image_title(file_path.name),
-                url=f"/images/{file_path.name}",
-                thumbnailUrl=thumbnail_url
-            ))
+    metadata = load_metadata()
+    metadata = migrate_legacy_images(metadata)
+
+    images = []
+    for image_id, meta in sorted(metadata.items(), key=lambda x: x[1].get("created", ""), reverse=True):
+        image = build_coloring_image(image_id, meta)
+        if image:
+            images.append(image)
 
     return ImagesResponse(images=images)
 
 
-def sanitize_filename(prompt: str) -> str:
-    """Convert prompt to a safe filename."""
-    # Take first 50 chars, lowercase, replace spaces with hyphens
-    name = prompt[:50].lower().strip()
-    # Remove non-alphanumeric characters except spaces and hyphens
-    name = re.sub(r'[^a-z0-9\s-]', '', name)
-    # Replace spaces with hyphens
-    name = re.sub(r'\s+', '-', name)
-    # Remove multiple consecutive hyphens
-    name = re.sub(r'-+', '-', name)
-    return name.strip('-')
+@app.get("/api/search", response_model=SearchResponse)
+async def search_images(q: str = Query(..., min_length=1, description="Search query")):
+    """Search images by prompt/title."""
+    metadata = load_metadata()
+    query_lower = q.lower()
+
+    images = []
+    for image_id, meta in metadata.items():
+        prompt = meta.get("prompt", "").lower()
+        title = meta.get("title", "").lower()
+
+        if query_lower in prompt or query_lower in title:
+            image = build_coloring_image(image_id, meta)
+            if image:
+                images.append(image)
+
+    # Sort by created date, newest first
+    images.sort(key=lambda x: x.created or "", reverse=True)
+
+    return SearchResponse(images=images, query=q, total=len(images))
 
 
 @app.post("/api/generate", response_model=GenerateImageResponse)
@@ -190,31 +266,40 @@ async def generate_image(request: GenerateImageRequest):
             image_response.raise_for_status()
             image_data = image_response.content
 
-        # Save to images directory
-        base_filename = sanitize_filename(request.prompt)
-        filename = f"{base_filename}.png"
+        # Generate UUID-based filename
+        image_id = uuid.uuid4().hex[:12]
+        filename = f"{image_id}.png"
         file_path = IMAGES_DIR / filename
 
-        # Handle duplicates by appending a number
-        counter = 1
-        while file_path.exists():
-            filename = f"{base_filename}-{counter}.png"
-            file_path = IMAGES_DIR / filename
-            counter += 1
-
+        # Ensure directory exists and save image
+        IMAGES_DIR.mkdir(parents=True, exist_ok=True)
         file_path.write_bytes(image_data)
 
-        # Generate thumbnail for the new image
+        # Generate thumbnail
         thumbnail_url = ensure_thumbnail(file_path)
 
-        # Return the new image metadata
-        image_id = file_path.stem
+        # Create metadata entry
+        created = datetime.now(timezone.utc).isoformat()
+        title = get_image_title(request.prompt)
+
+        metadata = load_metadata()
+        metadata[image_id] = {
+            "filename": filename,
+            "prompt": request.prompt.strip(),
+            "title": title,
+            "created": created
+        }
+        save_metadata(metadata)
+
+        # Return the new image
         new_image = ColoringImage(
             id=image_id,
             filename=filename,
-            title=get_image_title(filename),
+            title=title,
+            prompt=request.prompt.strip(),
             url=f"/images/{filename}",
-            thumbnailUrl=thumbnail_url
+            thumbnailUrl=thumbnail_url,
+            created=created
         )
 
         return GenerateImageResponse(image=new_image)

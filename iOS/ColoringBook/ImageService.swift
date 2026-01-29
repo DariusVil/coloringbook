@@ -62,6 +62,31 @@ actor ImageService {
         let generateResponse = try JSONDecoder().decode(GenerateImageResponse.self, from: data)
         return generateResponse.image
     }
+
+    /// Searches images by prompt/title
+    func searchImages(query: String, baseURL: URL) async throws -> [ColoringImage] {
+        guard var components = URLComponents(url: baseURL.appendingPathComponent("api/search"), resolvingAgainstBaseURL: true) else {
+            throw ImageServiceError.invalidURL
+        }
+        components.queryItems = [URLQueryItem(name: "q", value: query)]
+
+        guard let url = components.url else {
+            throw ImageServiceError.invalidURL
+        }
+
+        let (data, response) = try await session.data(from: url)
+
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw ImageServiceError.invalidResponse
+        }
+
+        guard httpResponse.statusCode == 200 else {
+            throw ImageServiceError.serverError(statusCode: httpResponse.statusCode)
+        }
+
+        let searchResponse = try JSONDecoder().decode(SearchResponse.self, from: data)
+        return searchResponse.images
+    }
 }
 
 enum ImageServiceError: Error, LocalizedError {

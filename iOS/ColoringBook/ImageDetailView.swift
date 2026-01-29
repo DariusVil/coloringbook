@@ -129,8 +129,10 @@ struct ImageDetailView: View {
                 id: "test",
                 filename: "test.png",
                 title: "Test Image",
+                prompt: "test image",
                 url: "/images/test.png",
-                thumbnailUrl: "/thumbnails/test.png"
+                thumbnailUrl: "/thumbnails/test.png",
+                created: nil
             ),
             baseURL: URL(string: "http://localhost:8000")!
         )
