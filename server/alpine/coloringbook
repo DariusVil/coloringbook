@@ -3,14 +3,14 @@
 name="coloringbook"
 description="Coloring Book API Server"
 
-command="/root/ColoringBook/server/venv/bin/uvicorn"
+command="/root/coloringbook/server/venv/bin/uvicorn"
 command_args="main:app --host 127.0.0.1 --port 8000"
 command_background=true
 pidfile="/run/${RC_SVCNAME}.pid"
 output_log="/var/log/coloringbook.log"
 error_log="/var/log/coloringbook.log"
 
-directory="/root/ColoringBook/server"
+directory="/root/coloringbook/server"
 
 export COLORINGBOOK_IMAGES_DIR="/var/lib/coloringbook/images"
 # Set your OpenAI API key in /etc/conf.d/coloringbook instead of here
