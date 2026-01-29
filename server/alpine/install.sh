@@ -1,6 +1,5 @@
 #!/bin/sh
 # Alpine Linux installation script for ColoringBook server
-# Run as root from /root/coloringbook/server directory
 #
 # Usage:
 #   sh alpine/install.sh          # Full install
@@ -11,12 +10,34 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 SERVER_DIR="$(dirname "$SCRIPT_DIR")"
 
+TUNNEL_ID="5a9824d6-2cec-4b5e-8e9f-7252972bc109"
+TUNNEL_HOSTNAME="coloringbook.brerum.com"
+
+setup_cloudflared_config() {
+    mkdir -p /root/.cloudflared
+
+    if [ ! -f "/root/.cloudflared/config.yml" ]; then
+        echo "==> Creating cloudflared config..."
+        cat > /root/.cloudflared/config.yml << EOF
+tunnel: ${TUNNEL_ID}
+credentials-file: /root/.cloudflared/${TUNNEL_ID}.json
+
+ingress:
+  - hostname: ${TUNNEL_HOSTNAME}
+    service: http://localhost:8000
+  - service: http_status:404
+EOF
+    fi
+}
+
 update_services() {
     echo "==> Updating OpenRC services..."
     cp "$SCRIPT_DIR/coloringbook" /etc/init.d/coloringbook
     cp "$SCRIPT_DIR/cloudflared" /etc/init.d/cloudflared
     chmod +x /etc/init.d/coloringbook
     chmod +x /etc/init.d/cloudflared
+
+    setup_cloudflared_config
 
     echo "==> Restarting services..."
     rc-service coloringbook restart 2>/dev/null || rc-service coloringbook start
@@ -28,13 +49,11 @@ update_services() {
     rc-service cloudflared status
 }
 
-# If "update" argument passed, just update services
 if [ "$1" = "update" ]; then
     update_services
     exit 0
 fi
 
-# Full installation
 echo "==> Installing dependencies..."
 apk update
 apk add python3 py3-pip py3-virtualenv cloudflared
@@ -60,32 +79,25 @@ chmod +x /etc/init.d/cloudflared
 echo "==> Installing configuration..."
 cp "$SCRIPT_DIR/coloringbook.conf" /etc/conf.d/coloringbook
 
+setup_cloudflared_config
+
 echo "==> Enabling services to start on boot..."
 rc-update add coloringbook default
 rc-update add cloudflared default
+
+echo "==> Starting services..."
+rc-service coloringbook start
+rc-service cloudflared start
 
 echo ""
 echo "=========================================="
 echo "Installation complete!"
 echo "=========================================="
 echo ""
-echo "Next steps:"
-echo ""
-echo "1. Edit your OpenAI API key:"
+echo "Edit your OpenAI API key:"
 echo "   vi /etc/conf.d/coloringbook"
 echo ""
-echo "2. Configure cloudflared (if not already done):"
-echo "   cloudflared tunnel login"
-echo "   cloudflared tunnel create coloringbook"
-echo ""
-echo "3. Create cloudflared config:"
-echo "   vi /root/.cloudflared/config.yml"
-echo ""
-echo "4. Start the services:"
-echo "   rc-service coloringbook start"
-echo "   rc-service cloudflared start"
-echo ""
-echo "5. Check status:"
+echo "Check status:"
 echo "   rc-service coloringbook status"
-echo "   tail -f /var/log/coloringbook.log"
+echo "   rc-service cloudflared status"
 echo ""
