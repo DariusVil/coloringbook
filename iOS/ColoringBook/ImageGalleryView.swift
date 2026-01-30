@@ -13,8 +13,8 @@ struct ImageGalleryView: View {
     var body: some View {
         NavigationStack {
             Group {
-                if viewModel.isLoading && viewModel.images.isEmpty {
-                    ProgressView("Loading images...")
+                if (viewModel.isLoading || viewModel.isSearching) && viewModel.images.isEmpty {
+                    ProgressView(viewModel.isSearching ? "Searching..." : "Loading images...")
                 } else if let error = viewModel.errorMessage, viewModel.images.isEmpty {
                     errorView(message: error)
                 } else if viewModel.images.isEmpty {
@@ -46,6 +46,19 @@ struct ImageGalleryView: View {
             }
             .task {
                 await viewModel.loadImages()
+            }
+            .searchable(text: $viewModel.searchQuery, prompt: "Search coloring pages")
+            .onSubmit(of: .search) {
+                Task {
+                    await viewModel.searchImages()
+                }
+            }
+            .onChange(of: viewModel.searchQuery) { oldValue, newValue in
+                if newValue.isEmpty && viewModel.isShowingSearchResults {
+                    Task {
+                        await viewModel.clearSearch()
+                    }
+                }
             }
             .sheet(isPresented: $showingSettings) {
                 SettingsView(viewModel: viewModel)
@@ -102,24 +115,45 @@ struct ImageGalleryView: View {
 
     private var emptyView: some View {
         VStack(spacing: 16) {
-            Image(systemName: "photo.on.rectangle.angled")
-                .font(.system(size: 48))
-                .foregroundStyle(.secondary)
+            if viewModel.isShowingSearchResults {
+                Image(systemName: "magnifyingglass")
+                    .font(.system(size: 48))
+                    .foregroundStyle(.secondary)
 
-            Text("No Images Available")
-                .font(.headline)
+                Text("No Results Found")
+                    .font(.headline)
 
-            Text("Add coloring images to the server's images folder.")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
+                Text("Try a different search term.")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
 
-            Button("Refresh") {
-                Task {
-                    await viewModel.loadImages()
+                Button("Clear Search") {
+                    Task {
+                        await viewModel.clearSearch()
+                    }
                 }
+                .buttonStyle(.borderedProminent)
+            } else {
+                Image(systemName: "photo.on.rectangle.angled")
+                    .font(.system(size: 48))
+                    .foregroundStyle(.secondary)
+
+                Text("No Images Available")
+                    .font(.headline)
+
+                Text("Add coloring images to the server's images folder.")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+
+                Button("Refresh") {
+                    Task {
+                        await viewModel.loadImages()
+                    }
+                }
+                .buttonStyle(.borderedProminent)
             }
-            .buttonStyle(.borderedProminent)
         }
         .padding()
     }

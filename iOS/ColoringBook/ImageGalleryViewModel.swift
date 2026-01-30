@@ -8,7 +8,11 @@ final class ImageGalleryViewModel {
     private(set) var images: [ColoringImage] = []
     private(set) var isLoading = false
     private(set) var isGenerating = false
+    private(set) var isSearching = false
     private(set) var errorMessage: String?
+
+    var searchQuery = ""
+    var isShowingSearchResults = false
 
     private let imageService = ImageService()
 
@@ -52,12 +56,38 @@ final class ImageGalleryViewModel {
 
         do {
             let newImage = try await imageService.generateImage(prompt: prompt, baseURL: serverURL)
-            images.append(newImage)
-            images.sort { $0.filename < $1.filename }
+            images.insert(newImage, at: 0)  // Add to beginning (newest first)
         } catch {
             errorMessage = error.localizedDescription
         }
 
         isGenerating = false
+    }
+
+    func searchImages() async {
+        let query = searchQuery.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !query.isEmpty else {
+            isShowingSearchResults = false
+            await loadImages()
+            return
+        }
+
+        isSearching = true
+        errorMessage = nil
+
+        do {
+            images = try await imageService.searchImages(query: query, baseURL: serverURL)
+            isShowingSearchResults = true
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+
+        isSearching = false
+    }
+
+    func clearSearch() async {
+        searchQuery = ""
+        isShowingSearchResults = false
+        await loadImages()
     }
 }
