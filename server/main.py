@@ -15,11 +15,12 @@ from fastapi import FastAPI, HTTPException, Query
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from openai import OpenAI
+from openai import AsyncOpenAI
 from PIL import Image
 
 # OpenAI configuration - reads OPENAI_API_KEY from environment automatically
-openai_client = OpenAI()
+# Use AsyncOpenAI to avoid blocking the event loop during image generation
+openai_client = AsyncOpenAI()
 
 app = FastAPI(
     title="Coloring Book API",
@@ -259,7 +260,7 @@ async def generate_image(request: GenerateImageRequest):
 
     try:
         # Generate image with gpt-image-1.5
-        response = openai_client.images.generate(
+        response = await openai_client.images.generate(
             model="gpt-image-1.5",
             prompt=enhanced_prompt,
             size="1024x1536",  # Portrait orientation for coloring pages
