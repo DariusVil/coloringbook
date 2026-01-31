@@ -6,6 +6,7 @@ struct ImageDetailView: View {
     let image: ColoringImage
     let baseURL: URL
 
+    @Environment(\.colorScheme) private var colorScheme
     @State private var scale: CGFloat = 1.0
     @State private var lastScale: CGFloat = 1.0
     @State private var loadedImage: UIImage?
@@ -13,53 +14,28 @@ struct ImageDetailView: View {
     @State private var showingPrintError = false
 
     var body: some View {
-        GeometryReader { geometry in
-            ScrollView([.horizontal, .vertical], showsIndicators: false) {
-                Group {
-                    if let uiImage = loadedImage {
-                        Image(uiImage: uiImage)
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .scaleEffect(scale)
-                            .frame(
-                                width: geometry.size.width * scale,
-                                height: geometry.size.height * scale
-                            )
-                            .gesture(magnificationGesture)
-                    } else if loadError {
-                        VStack {
-                            Image(systemName: "exclamationmark.triangle")
-                                .font(.system(size: 48))
-                            Text("Failed to load image")
-                        }
-                        .frame(width: geometry.size.width, height: geometry.size.height)
-                    } else {
-                        ProgressView()
-                            .frame(width: geometry.size.width, height: geometry.size.height)
-                    }
+        ZStack {
+            // Background
+            backgroundView
+                .ignoresSafeArea()
+
+            // Image content
+            GeometryReader { geometry in
+                ScrollView([.horizontal, .vertical], showsIndicators: false) {
+                    imageContent(in: geometry)
                 }
+            }
+
+            // Floating print button
+            VStack {
+                Spacer()
+                printButton
+                    .padding(.bottom, 32)
             }
         }
         .navigationTitle(image.title)
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    printCurrentImage()
-                } label: {
-                    Image(systemName: "printer")
-                }
-                .disabled(loadedImage == nil || !PrintService.isPrintingAvailable)
-            }
-
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    resetZoom()
-                } label: {
-                    Image(systemName: "arrow.counterclockwise")
-                }
-            }
-        }
+        .toolbarBackground(.ultraThinMaterial, for: .navigationBar)
         .alert("Print Unavailable", isPresented: $showingPrintError) {
             Button("OK", role: .cancel) {}
         } message: {
@@ -70,22 +46,121 @@ struct ImageDetailView: View {
         }
     }
 
+    private var backgroundView: some View {
+        Group {
+            if colorScheme == .dark {
+                Color(white: 0.06)
+            } else {
+                Color(.systemGray6)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func imageContent(in geometry: GeometryProxy) -> some View {
+        Group {
+            if let uiImage = loadedImage {
+                // Image card
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .background(.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                    .shadow(color: .black.opacity(colorScheme == .dark ? 0.5 : 0.15), radius: 20, y: 10)
+                    .scaleEffect(scale)
+                    .frame(
+                        width: geometry.size.width * scale,
+                        height: geometry.size.height * scale
+                    )
+                    .gesture(magnificationGesture)
+                    .onTapGesture(count: 2) {
+                        withAnimation(.spring(response: 0.3)) {
+                            scale = scale > 1.0 ? 1.0 : 2.0
+                        }
+                    }
+                    .padding(20)
+            } else if loadError {
+                errorContent
+                    .frame(width: geometry.size.width, height: geometry.size.height)
+            } else {
+                loadingContent
+                    .frame(width: geometry.size.width, height: geometry.size.height)
+            }
+        }
+    }
+
+    private var loadingContent: some View {
+        VStack(spacing: 16) {
+            ProgressView()
+                .scaleEffect(1.2)
+            Text("Loading image...")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+        }
+    }
+
+    private var errorContent: some View {
+        VStack(spacing: 20) {
+            ZStack {
+                Circle()
+                    .fill(.red.opacity(0.1))
+                    .frame(width: 80, height: 80)
+
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .font(.system(size: 36))
+                    .foregroundStyle(.red)
+            }
+
+            VStack(spacing: 8) {
+                Text("Failed to Load")
+                    .font(.title3.weight(.semibold))
+
+                Text("The image could not be loaded.")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+        }
+    }
+
+    private var printButton: some View {
+        Button {
+            printCurrentImage()
+        } label: {
+            HStack(spacing: 10) {
+                Image(systemName: "printer.fill")
+                    .font(.system(size: 18, weight: .semibold))
+                Text("Print")
+                    .font(.body.weight(.semibold))
+            }
+            .foregroundStyle(.white)
+            .padding(.horizontal, 28)
+            .padding(.vertical, 16)
+            .background {
+                Capsule()
+                    .fill(.purple)
+                    .shadow(color: .purple.opacity(0.4), radius: 12, y: 6)
+            }
+        }
+        .opacity(loadedImage != nil && PrintService.isPrintingAvailable ? 1 : 0)
+        .animation(.easeInOut(duration: 0.2), value: loadedImage != nil)
+    }
+
     private var magnificationGesture: some Gesture {
         MagnificationGesture()
             .onChanged { value in
                 let delta = value / lastScale
                 lastScale = value
-                scale = min(max(scale * delta, 1.0), 5.0)
+                scale = min(max(scale * delta, 0.5), 5.0)
             }
             .onEnded { _ in
                 lastScale = 1.0
+                // Snap back if too small
+                if scale < 1.0 {
+                    withAnimation(.spring(response: 0.3)) {
+                        scale = 1.0
+                    }
+                }
             }
-    }
-
-    private func resetZoom() {
-        withAnimation {
-            scale = 1.0
-        }
     }
 
     private func loadImage() async {
@@ -133,4 +208,22 @@ struct ImageDetailView: View {
             baseURL: URL(string: "http://localhost:8000")!
         )
     }
+}
+
+#Preview("Dark Mode") {
+    NavigationStack {
+        ImageDetailView(
+            image: ColoringImage(
+                id: "test",
+                filename: "test.png",
+                title: "Test Image",
+                prompt: "test image",
+                url: "/images/test.png",
+                thumbnailUrl: "/thumbnails/test.png",
+                created: nil
+            ),
+            baseURL: URL(string: "http://localhost:8000")!
+        )
+    }
+    .preferredColorScheme(.dark)
 }
