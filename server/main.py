@@ -3,6 +3,7 @@ Kids Coloring Image Browser - Backend API
 FastAPI server that serves coloring images from the images/ directory.
 """
 
+import base64
 import json
 import os
 import httpx
@@ -257,22 +258,17 @@ async def generate_image(request: GenerateImageRequest):
     )
 
     try:
-        # Generate image with DALL-E 3
+        # Generate image with gpt-image-1.5
         response = openai_client.images.generate(
             model="gpt-image-1.5",
             prompt=enhanced_prompt,
-            size="1024x1024",
-            quality="standard",
+            size="1024x1536",  # Portrait orientation for coloring pages
+            output_format="png",
             n=1,
         )
 
-        image_url = response.data[0].url
-
-        # Download the generated image
-        async with httpx.AsyncClient() as client:
-            image_response = await client.get(image_url)
-            image_response.raise_for_status()
-            image_data = image_response.content
+        # gpt-image-1.5 always returns base64
+        image_data = base64.b64decode(response.data[0].b64_json)
 
         # Generate UUID-based filename
         image_id = uuid.uuid4().hex[:12]
