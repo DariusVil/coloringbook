@@ -9,6 +9,7 @@ final class ImageGalleryViewModel {
     private(set) var isGenerating = false
     private(set) var isSearching = false
     private(set) var errorMessage: String?
+    private(set) var lastGeneratedImage: ColoringImage?
 
     var searchQuery = ""
     var isShowingSearchResults = false
@@ -54,11 +55,13 @@ final class ImageGalleryViewModel {
         generationTask = Task {
             isGenerating = true
             errorMessage = nil
+            lastGeneratedImage = nil
 
             do {
                 let newImage = try await imageService.generateImage(prompt: prompt, baseURL: serverURL)
                 try Task.checkCancellation()
                 images.insert(newImage, at: 0)  // Add to beginning (newest first)
+                lastGeneratedImage = newImage
             } catch is CancellationError {
                 // User cancelled, no error message needed
             } catch {
@@ -67,6 +70,10 @@ final class ImageGalleryViewModel {
 
             isGenerating = false
         }
+    }
+
+    func clearLastGeneratedImage() {
+        lastGeneratedImage = nil
     }
 
     func cancelGeneration() {

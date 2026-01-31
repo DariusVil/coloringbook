@@ -5,6 +5,7 @@ struct ImageGalleryView: View {
     @State private var viewModel = ImageGalleryViewModel()
     @State private var showingSettings = false
     @State private var showingGenerate = false
+    @State private var navigationPath = NavigationPath()
     @Environment(\.colorScheme) private var colorScheme
 
     private let columns = [
@@ -12,7 +13,7 @@ struct ImageGalleryView: View {
     ]
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $navigationPath) {
             ZStack {
                 // Background gradient
                 backgroundGradient
@@ -76,7 +77,12 @@ struct ImageGalleryView: View {
             .sheet(isPresented: $showingSettings) {
                 SettingsView(viewModel: viewModel)
             }
-            .sheet(isPresented: $showingGenerate) {
+            .sheet(isPresented: $showingGenerate, onDismiss: {
+                if let newImage = viewModel.lastGeneratedImage {
+                    viewModel.clearLastGeneratedImage()
+                    navigationPath.append(newImage)
+                }
+            }) {
                 GenerateImageView(viewModel: viewModel)
             }
         }
