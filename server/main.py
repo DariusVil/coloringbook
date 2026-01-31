@@ -243,12 +243,17 @@ async def generate_image(request: GenerateImageRequest):
 
     # Enhance prompt for coloring book style
     enhanced_prompt = (
-        f"A children's coloring book illustration of {request.prompt}. "
-        "Black line art only on solid white background. "
-        "Clean simple outlines, no shading, no gradients, no gray tones, no colors. "
-        "Vector style, flat 2D illustration, not a photograph. "
-        "Do not show the page on a table, do not include pencils, crayons, hands, "
-        "or any background elements. Just the line drawing itself, filling the frame."
+        f"Create a children's coloring-book page illustration of: {request.prompt}.\n"
+        "Style: black ink line art only, pure white background, simple clean outlines, "
+        "vector-like flat 2D, not photorealistic.\n"
+        "Coloring-book constraints: no shading, no hatching, no stippling, no gradients, "
+        "no gray, no color.\n"
+        "Line quality: smooth continuous strokes, medium-thick consistent line weight, "
+        "closed shapes where appropriate, minimal tiny details (easy to color).\n"
+        "Composition: single page, portrait, centered subject, fills most of the frame, "
+        "clear silhouette, ample white space inside shapes for coloring.\n"
+        "Exclusions: no background scene, no setting props, no table, no frame/border, "
+        "no text, no watermark, no pencils/crayons/hands, no shadows."
     )
 
     try:
