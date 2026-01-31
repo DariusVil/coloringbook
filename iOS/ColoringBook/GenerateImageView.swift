@@ -5,6 +5,7 @@ struct GenerateImageView: View {
     @Bindable var viewModel: ImageGalleryViewModel
     @Environment(\.dismiss) private var dismiss
     @State private var prompt = ""
+    @State private var didStartGenerating = false
 
     var body: some View {
         NavigationStack {
@@ -28,6 +29,17 @@ struct GenerateImageView: View {
                 }
             }
             .interactiveDismissDisabled(viewModel.isGenerating)
+            .onChange(of: viewModel.isGenerating) { wasGenerating, isGenerating in
+                if wasGenerating && !isGenerating && didStartGenerating {
+                    // Generation finished
+                    if viewModel.errorMessage == nil {
+                        dismiss()
+                    }
+                }
+                if isGenerating {
+                    didStartGenerating = true
+                }
+            }
         }
     }
 
@@ -44,12 +56,7 @@ struct GenerateImageView: View {
 
             Section {
                 Button {
-                    Task {
-                        await viewModel.generateImage(prompt: prompt)
-                        if viewModel.errorMessage == nil {
-                            dismiss()
-                        }
-                    }
+                    viewModel.generateImage(prompt: prompt)
                 } label: {
                     HStack {
                         Spacer()

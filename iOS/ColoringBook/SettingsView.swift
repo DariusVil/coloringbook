@@ -9,6 +9,8 @@ struct SettingsView: View {
     @State private var isCheckingConnection = false
     @State private var connectionStatus: ConnectionStatus = .unknown
 
+    private let imageService = ImageService()
+
     enum ConnectionStatus {
         case unknown
         case connected
@@ -105,14 +107,9 @@ struct SettingsView: View {
         connectionStatus = .unknown
 
         Task {
-            let tempViewModel = ImageGalleryViewModel()
-            tempViewModel.serverURL = url
-            let isConnected = await tempViewModel.checkServerHealth()
-
-            await MainActor.run {
-                connectionStatus = isConnected ? .connected : .failed
-                isCheckingConnection = false
-            }
+            let isConnected = (try? await imageService.healthCheck(baseURL: url)) ?? false
+            connectionStatus = isConnected ? .connected : .failed
+            isCheckingConnection = false
         }
     }
 

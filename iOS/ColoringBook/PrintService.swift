@@ -1,13 +1,12 @@
-import SwiftUI
 import UIKit
 
 /// Service for printing coloring images via AirPrint
 @MainActor
-final class PrintService {
+enum PrintService {
 
     /// Presents the print dialog for a given image
     @discardableResult
-    func printImage(_ image: UIImage, title: String) -> Bool {
+    static func printImage(_ image: UIImage, title: String) -> Bool {
         guard UIPrintInteractionController.isPrintingAvailable else {
             return false
         }
@@ -22,7 +21,7 @@ final class PrintService {
         printController.printInfo = printInfo
         printController.printingItem = image
 
-        printController.present(animated: true) { _, completed, error in
+        printController.present(animated: true) { _, _, error in
             if let error = error {
                 print("Print error: \(error.localizedDescription)")
             }
@@ -32,7 +31,7 @@ final class PrintService {
     }
 
     /// Checks if printing is available on this device
-    var isPrintingAvailable: Bool {
+    static var isPrintingAvailable: Bool {
         UIPrintInteractionController.isPrintingAvailable
     }
 }

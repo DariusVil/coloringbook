@@ -1,5 +1,4 @@
 import Foundation
-import SwiftUI
 
 /// View model for the image gallery
 @Observable
@@ -51,21 +50,23 @@ final class ImageGalleryViewModel {
         }
     }
 
-    func generateImage(prompt: String) async {
-        isGenerating = true
-        errorMessage = nil
+    func generateImage(prompt: String) {
+        generationTask = Task {
+            isGenerating = true
+            errorMessage = nil
 
-        do {
-            let newImage = try await imageService.generateImage(prompt: prompt, baseURL: serverURL)
-            try Task.checkCancellation()
-            images.insert(newImage, at: 0)  // Add to beginning (newest first)
-        } catch is CancellationError {
-            // User cancelled, no error message needed
-        } catch {
-            errorMessage = error.localizedDescription
+            do {
+                let newImage = try await imageService.generateImage(prompt: prompt, baseURL: serverURL)
+                try Task.checkCancellation()
+                images.insert(newImage, at: 0)  // Add to beginning (newest first)
+            } catch is CancellationError {
+                // User cancelled, no error message needed
+            } catch {
+                errorMessage = error.localizedDescription
+            }
+
+            isGenerating = false
         }
-
-        isGenerating = false
     }
 
     func cancelGeneration() {
