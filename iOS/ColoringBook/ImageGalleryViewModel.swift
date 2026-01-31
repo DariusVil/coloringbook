@@ -17,18 +17,7 @@ final class ImageGalleryViewModel {
     private let imageService = ImageService()
     private var generationTask: Task<Void, Never>?
 
-    var serverURL: URL {
-        get {
-            if let urlString = UserDefaults.standard.string(forKey: "serverURL"),
-               let url = URL(string: urlString) {
-                return url
-            }
-            return URL(string: "https://coloringbook.brerum.com")!
-        }
-        set {
-            UserDefaults.standard.set(newValue.absoluteString, forKey: "serverURL")
-        }
-    }
+    let serverURL = URL(string: "https://coloringbook.brerum.com")!
 
     func loadImages() async {
         isLoading = true
@@ -41,14 +30,6 @@ final class ImageGalleryViewModel {
         }
 
         isLoading = false
-    }
-
-    func checkServerHealth() async -> Bool {
-        do {
-            return try await imageService.healthCheck(baseURL: serverURL)
-        } catch {
-            return false
-        }
     }
 
     func generateImage(prompt: String) {

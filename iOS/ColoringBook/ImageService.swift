@@ -26,19 +26,7 @@ actor ImageService {
         return imagesResponse.images
     }
 
-    /// Performs a health check on the server
-    func healthCheck(baseURL: URL) async throws -> Bool {
-        let url = baseURL.appendingPathComponent("api/health")
-        let (_, response) = try await session.data(from: url)
-
-        guard let httpResponse = response as? HTTPURLResponse else {
-            return false
-        }
-
-        return httpResponse.statusCode == 200
-    }
-
-    /// Generates a new coloring image using DALL-E 3
+    /// Generates a new coloring image
     func generateImage(prompt: String, baseURL: URL) async throws -> ColoringImage {
         let url = baseURL.appendingPathComponent("api/generate")
 

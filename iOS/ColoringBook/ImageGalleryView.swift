@@ -3,7 +3,6 @@ import SwiftUI
 /// Main gallery view showing a grid of coloring images
 struct ImageGalleryView: View {
     @State private var viewModel = ImageGalleryViewModel()
-    @State private var showingSettings = false
     @State private var showingGenerate = false
     @State private var navigationPath = NavigationPath()
     @Environment(\.colorScheme) private var colorScheme
@@ -35,23 +34,13 @@ struct ImageGalleryView: View {
             .toolbarBackground(.ultraThinMaterial, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    HStack(spacing: 12) {
-                        Button {
-                            showingGenerate = true
-                        } label: {
-                            Image(systemName: "wand.and.stars")
-                                .symbolRenderingMode(.hierarchical)
-                                .foregroundStyle(.purple)
-                                .font(.system(size: 18, weight: .medium))
-                        }
-
-                        Button {
-                            showingSettings = true
-                        } label: {
-                            Image(systemName: "gearshape")
-                                .font(.system(size: 17, weight: .medium))
-                                .foregroundStyle(.secondary)
-                        }
+                    Button {
+                        showingGenerate = true
+                    } label: {
+                        Image(systemName: "wand.and.stars")
+                            .symbolRenderingMode(.hierarchical)
+                            .foregroundStyle(.purple)
+                            .font(.system(size: 18, weight: .medium))
                     }
                 }
             }
@@ -73,9 +62,6 @@ struct ImageGalleryView: View {
                         await viewModel.clearSearch()
                     }
                 }
-            }
-            .sheet(isPresented: $showingSettings) {
-                SettingsView(viewModel: viewModel)
             }
             .sheet(isPresented: $showingGenerate, onDismiss: {
                 if let newImage = viewModel.lastGeneratedImage {
@@ -155,26 +141,18 @@ struct ImageGalleryView: View {
                     .multilineTextAlignment(.center)
             }
 
-            VStack(spacing: 12) {
-                Button {
-                    Task {
-                        await viewModel.loadImages()
-                    }
-                } label: {
-                    Text("Try Again")
-                        .font(.body.weight(.medium))
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 12)
+            Button {
+                Task {
+                    await viewModel.loadImages()
                 }
-                .buttonStyle(.borderedProminent)
-                .tint(.purple)
-
-                Button("Settings") {
-                    showingSettings = true
-                }
-                .font(.body.weight(.medium))
-                .foregroundStyle(.purple)
+            } label: {
+                Text("Try Again")
+                    .font(.body.weight(.medium))
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 12)
             }
+            .buttonStyle(.borderedProminent)
+            .tint(.purple)
             .frame(maxWidth: 200)
         }
         .padding(32)
