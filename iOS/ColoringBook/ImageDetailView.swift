@@ -23,6 +23,10 @@ struct ImageDetailView: View {
             GeometryReader { geometry in
                 ScrollView([.horizontal, .vertical], showsIndicators: false) {
                     imageContent(in: geometry)
+                        .frame(
+                            minWidth: geometry.size.width,
+                            minHeight: geometry.size.height
+                        )
                 }
             }
 
@@ -64,13 +68,16 @@ struct ImageDetailView: View {
                 Image(uiImage: uiImage)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
+                    .padding(20)
                     .background(.white)
                     .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
                     .shadow(color: .black.opacity(colorScheme == .dark ? 0.5 : 0.15), radius: 20, y: 10)
+                    .padding(20)
                     .scaleEffect(scale)
                     .frame(
                         width: geometry.size.width * scale,
-                        height: geometry.size.height * scale
+                        height: geometry.size.height * scale,
+                        alignment: .center
                     )
                     .gesture(magnificationGesture)
                     .onTapGesture(count: 2) {
@@ -78,7 +85,6 @@ struct ImageDetailView: View {
                             scale = scale > 1.0 ? 1.0 : 2.0
                         }
                     }
-                    .padding(20)
             } else if loadError {
                 errorContent
                     .frame(width: geometry.size.width, height: geometry.size.height)
