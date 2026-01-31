@@ -15,6 +15,7 @@ final class ImageGalleryViewModel {
     var isShowingSearchResults = false
 
     private let imageService = ImageService()
+    private var generationTask: Task<Void, Never>?
 
     var serverURL: URL {
         get {
@@ -56,11 +57,20 @@ final class ImageGalleryViewModel {
 
         do {
             let newImage = try await imageService.generateImage(prompt: prompt, baseURL: serverURL)
+            try Task.checkCancellation()
             images.insert(newImage, at: 0)  // Add to beginning (newest first)
+        } catch is CancellationError {
+            // User cancelled, no error message needed
         } catch {
             errorMessage = error.localizedDescription
         }
 
+        isGenerating = false
+    }
+
+    func cancelGeneration() {
+        generationTask?.cancel()
+        generationTask = nil
         isGenerating = false
     }
 
