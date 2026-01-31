@@ -254,7 +254,7 @@ async def generate_image(request: GenerateImageRequest):
     try:
         # Generate image with DALL-E 3
         response = openai_client.images.generate(
-            model="dall-e-3",
+            model="gpt-image-1.5",
             prompt=enhanced_prompt,
             size="1024x1024",
             quality="standard",
