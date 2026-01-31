@@ -6,7 +6,6 @@ FastAPI server that serves coloring images from the images/ directory.
 import base64
 import json
 import os
-import httpx
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
@@ -49,7 +48,6 @@ else:
 THUMBNAILS_DIR = IMAGES_DIR / "thumbnails"
 METADATA_FILE = IMAGES_DIR / "metadata.json"
 THUMBNAIL_SIZE = (400, 400)
-SUPPORTED_EXTENSIONS = {".png", ".jpg", ".jpeg", ".pdf"}
 
 
 class ColoringImage(BaseModel):
@@ -144,34 +142,6 @@ def ensure_thumbnail(image_path: Path) -> Optional[str]:
     return f"/thumbnails/{image_path.name}"
 
 
-def migrate_legacy_images(metadata: dict) -> dict:
-    """Add any images on disk that aren't in metadata (legacy migration)."""
-    if not IMAGES_DIR.exists():
-        return metadata
-
-    changed = False
-    for file_path in IMAGES_DIR.iterdir():
-        if file_path.is_file() and file_path.suffix.lower() in SUPPORTED_EXTENSIONS:
-            image_id = file_path.stem
-            if image_id not in metadata:
-                # Legacy image without metadata - create entry from filename
-                legacy_title = image_id.replace("-", " ").replace("_", " ").title()
-                metadata[image_id] = {
-                    "filename": file_path.name,
-                    "prompt": legacy_title,  # Use title as prompt for legacy images
-                    "title": legacy_title,
-                    "created": datetime.fromtimestamp(
-                        file_path.stat().st_mtime, tz=timezone.utc
-                    ).isoformat()
-                }
-                changed = True
-
-    if changed:
-        save_metadata(metadata)
-
-    return metadata
-
-
 def build_coloring_image(image_id: str, meta: dict) -> Optional[ColoringImage]:
     """Build a ColoringImage from metadata, ensuring file exists."""
     file_path = IMAGES_DIR / meta["filename"]
@@ -182,7 +152,7 @@ def build_coloring_image(image_id: str, meta: dict) -> Optional[ColoringImage]:
     return ColoringImage(
         id=image_id,
         filename=meta["filename"],
-        title=meta.get("title", meta.get("prompt", image_id)),
+        title=meta["title"],
         prompt=meta.get("prompt"),
         url=f"/images/{meta['filename']}",
         thumbnailUrl=thumbnail_url,
@@ -204,7 +174,6 @@ async def list_images():
         IMAGES_DIR.mkdir(parents=True, exist_ok=True)
 
     metadata = load_metadata()
-    metadata = migrate_legacy_images(metadata)
 
     images = []
     for image_id, meta in sorted(metadata.items(), key=lambda x: x[1].get("created", ""), reverse=True):
