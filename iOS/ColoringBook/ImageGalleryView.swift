@@ -5,38 +5,51 @@ struct ImageGalleryView: View {
     @State private var viewModel = ImageGalleryViewModel()
     @State private var showingSettings = false
     @State private var showingGenerate = false
+    @Environment(\.colorScheme) private var colorScheme
 
     private let columns = [
-        GridItem(.adaptive(minimum: 150, maximum: 200), spacing: 16)
+        GridItem(.adaptive(minimum: 160, maximum: 200), spacing: 16)
     ]
 
     var body: some View {
         NavigationStack {
-            Group {
-                if (viewModel.isLoading || viewModel.isSearching) && viewModel.images.isEmpty {
-                    ProgressView(viewModel.isSearching ? "Searching..." : "Loading images...")
-                } else if let error = viewModel.errorMessage, viewModel.images.isEmpty {
-                    errorView(message: error)
-                } else if viewModel.images.isEmpty {
-                    emptyView
-                } else {
-                    galleryGrid
+            ZStack {
+                // Background gradient
+                backgroundGradient
+                    .ignoresSafeArea()
+
+                Group {
+                    if (viewModel.isLoading || viewModel.isSearching) && viewModel.images.isEmpty {
+                        loadingView
+                    } else if let error = viewModel.errorMessage, viewModel.images.isEmpty {
+                        errorView(message: error)
+                    } else if viewModel.images.isEmpty {
+                        emptyView
+                    } else {
+                        galleryGrid
+                    }
                 }
             }
             .navigationTitle("Coloring Book")
+            .toolbarBackground(.ultraThinMaterial, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    HStack(spacing: 16) {
+                    HStack(spacing: 12) {
                         Button {
                             showingGenerate = true
                         } label: {
                             Image(systemName: "wand.and.stars")
+                                .symbolRenderingMode(.hierarchical)
+                                .foregroundStyle(.purple)
+                                .font(.system(size: 18, weight: .medium))
                         }
 
                         Button {
                             showingSettings = true
                         } label: {
-                            Image(systemName: "gear")
+                            Image(systemName: "gearshape")
+                                .font(.system(size: 17, weight: .medium))
+                                .foregroundStyle(.secondary)
                         }
                     }
                 }
@@ -69,16 +82,45 @@ struct ImageGalleryView: View {
         }
     }
 
+    private var backgroundGradient: some View {
+        Group {
+            if colorScheme == .dark {
+                LinearGradient(
+                    colors: [
+                        Color(white: 0.08),
+                        Color(white: 0.05)
+                    ],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+            } else {
+                Color(.systemGroupedBackground)
+            }
+        }
+    }
+
+    private var loadingView: some View {
+        VStack(spacing: 16) {
+            ProgressView()
+                .scaleEffect(1.2)
+            Text(viewModel.isSearching ? "Searching..." : "Loading images...")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+        }
+    }
+
     private var galleryGrid: some View {
         ScrollView {
-            LazyVGrid(columns: columns, spacing: 16) {
+            LazyVGrid(columns: columns, spacing: 20) {
                 ForEach(viewModel.images) { image in
                     NavigationLink(value: image) {
                         ImageThumbnailView(image: image, baseURL: viewModel.serverURL)
                     }
+                    .buttonStyle(.plain)
                 }
             }
-            .padding()
+            .padding(.horizontal, 16)
+            .padding(.vertical, 20)
         }
         .navigationDestination(for: ColoringImage.self) { image in
             ImageDetailView(image: image, baseURL: viewModel.serverURL)
@@ -86,76 +128,122 @@ struct ImageGalleryView: View {
     }
 
     private func errorView(message: String) -> some View {
-        VStack(spacing: 16) {
-            Image(systemName: "exclamationmark.triangle")
-                .font(.system(size: 48))
-                .foregroundStyle(.secondary)
+        VStack(spacing: 20) {
+            ZStack {
+                Circle()
+                    .fill(.red.opacity(0.1))
+                    .frame(width: 80, height: 80)
 
-            Text("Unable to Load Images")
-                .font(.headline)
-
-            Text(message)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-
-            Button("Try Again") {
-                Task {
-                    await viewModel.loadImages()
-                }
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .font(.system(size: 36))
+                    .foregroundStyle(.red)
             }
-            .buttonStyle(.borderedProminent)
 
-            Button("Settings") {
-                showingSettings = true
-            }
-        }
-        .padding()
-    }
+            VStack(spacing: 8) {
+                Text("Unable to Load Images")
+                    .font(.title3.weight(.semibold))
 
-    private var emptyView: some View {
-        VStack(spacing: 16) {
-            if viewModel.isShowingSearchResults {
-                Image(systemName: "magnifyingglass")
-                    .font(.system(size: 48))
-                    .foregroundStyle(.secondary)
-
-                Text("No Results Found")
-                    .font(.headline)
-
-                Text("Try a different search term.")
+                Text(message)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
+            }
 
-                Button("Clear Search") {
-                    Task {
-                        await viewModel.clearSearch()
-                    }
-                }
-                .buttonStyle(.borderedProminent)
-            } else {
-                Image(systemName: "photo.on.rectangle.angled")
-                    .font(.system(size: 48))
-                    .foregroundStyle(.secondary)
-
-                Text("No Images Available")
-                    .font(.headline)
-
-                Text("Add coloring images to the server's images folder.")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-
-                Button("Refresh") {
+            VStack(spacing: 12) {
+                Button {
                     Task {
                         await viewModel.loadImages()
                     }
+                } label: {
+                    Text("Try Again")
+                        .font(.body.weight(.medium))
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 12)
                 }
                 .buttonStyle(.borderedProminent)
+                .tint(.purple)
+
+                Button("Settings") {
+                    showingSettings = true
+                }
+                .font(.body.weight(.medium))
+                .foregroundStyle(.purple)
+            }
+            .frame(maxWidth: 200)
+        }
+        .padding(32)
+    }
+
+    private var emptyView: some View {
+        VStack(spacing: 20) {
+            if viewModel.isShowingSearchResults {
+                ZStack {
+                    Circle()
+                        .fill(.secondary.opacity(0.1))
+                        .frame(width: 80, height: 80)
+
+                    Image(systemName: "magnifyingglass")
+                        .font(.system(size: 32))
+                        .foregroundStyle(.secondary)
+                }
+
+                VStack(spacing: 8) {
+                    Text("No Results Found")
+                        .font(.title3.weight(.semibold))
+
+                    Text("Try a different search term.")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                }
+
+                Button {
+                    Task {
+                        await viewModel.clearSearch()
+                    }
+                } label: {
+                    Text("Clear Search")
+                        .font(.body.weight(.medium))
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 12)
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(.purple)
+                .frame(maxWidth: 200)
+            } else {
+                ZStack {
+                    Circle()
+                        .fill(.purple.opacity(0.1))
+                        .frame(width: 80, height: 80)
+
+                    Image(systemName: "paintpalette.fill")
+                        .font(.system(size: 32))
+                        .foregroundStyle(.purple)
+                }
+
+                VStack(spacing: 8) {
+                    Text("No Coloring Pages Yet")
+                        .font(.title3.weight(.semibold))
+
+                    Text("Create your first coloring page with AI!")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                }
+
+                Button {
+                    showingGenerate = true
+                } label: {
+                    Label("Create", systemImage: "wand.and.stars")
+                        .font(.body.weight(.medium))
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 12)
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(.purple)
+                .frame(maxWidth: 200)
             }
         }
-        .padding()
+        .padding(32)
     }
 }
 
@@ -163,43 +251,85 @@ struct ImageGalleryView: View {
 struct ImageThumbnailView: View {
     let image: ColoringImage
     let baseURL: URL
+    @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
-        VStack {
-            if let url = image.thumbnailFullURL(baseURL: baseURL) {
-                AsyncImage(url: url) { phase in
-                    switch phase {
-                    case .empty:
-                        ProgressView()
-                            .frame(height: 150)
-                    case .success(let loadedImage):
-                        loadedImage
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(height: 150)
-                    case .failure:
-                        Image(systemName: "photo")
-                            .font(.system(size: 48))
-                            .foregroundStyle(.secondary)
-                            .frame(height: 150)
-                    @unknown default:
-                        EmptyView()
+        VStack(spacing: 0) {
+            // Image container
+            ZStack {
+                if let url = image.thumbnailFullURL(baseURL: baseURL) {
+                    AsyncImage(url: url) { phase in
+                        switch phase {
+                        case .empty:
+                            Rectangle()
+                                .fill(.clear)
+                                .aspectRatio(3/4, contentMode: .fit)
+                                .overlay {
+                                    ProgressView()
+                                }
+                        case .success(let loadedImage):
+                            loadedImage
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                        case .failure:
+                            Rectangle()
+                                .fill(.clear)
+                                .aspectRatio(3/4, contentMode: .fit)
+                                .overlay {
+                                    Image(systemName: "photo")
+                                        .font(.system(size: 32))
+                                        .foregroundStyle(.tertiary)
+                                }
+                        @unknown default:
+                            EmptyView()
+                        }
                     }
                 }
             }
+            .frame(maxWidth: .infinity)
+            .padding(12)
+            .background(cardImageBackground)
 
+            // Title bar
             Text(image.title)
-                .font(.caption)
+                .font(.footnote.weight(.medium))
                 .lineLimit(1)
-                .foregroundStyle(.primary)
+                .truncationMode(.tail)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 10)
+                .background(cardTitleBackground)
         }
-        .padding(8)
-        .background(Color(.systemBackground))
-        .cornerRadius(12)
-        .shadow(radius: 2)
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .stroke(cardBorder, lineWidth: 1)
+        }
+        .shadow(color: .black.opacity(colorScheme == .dark ? 0.3 : 0.08), radius: 8, y: 4)
+    }
+
+    private var cardImageBackground: Color {
+        colorScheme == .dark ? Color(white: 0.95) : .white
+    }
+
+    private var cardTitleBackground: some ShapeStyle {
+        colorScheme == .dark
+            ? Color(white: 0.15)
+            : Color(.systemGray6)
+    }
+
+    private var cardBorder: some ShapeStyle {
+        colorScheme == .dark
+            ? Color.white.opacity(0.08)
+            : Color.black.opacity(0.04)
     }
 }
 
 #Preview {
     ImageGalleryView()
+}
+
+#Preview("Dark Mode") {
+    ImageGalleryView()
+        .preferredColorScheme(.dark)
 }
