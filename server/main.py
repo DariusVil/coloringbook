@@ -13,6 +13,7 @@ from typing import Optional
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 from openai import AsyncOpenAI
 from PIL import Image
@@ -282,6 +283,13 @@ async def generate_image(request: GenerateImageRequest):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to generate image: {str(e)}")
+
+
+@app.get("/privacy", response_class=HTMLResponse)
+async def privacy_policy():
+    """Serve the privacy policy page."""
+    privacy_file = Path(__file__).parent / "privacy.html"
+    return privacy_file.read_text()
 
 
 # Mount static files for serving images and thumbnails
