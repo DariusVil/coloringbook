@@ -3,33 +3,16 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		A10000000000000000000001 /* ColoringBookApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000001 /* ColoringBookApp.swift */; };
-		A10000000000000000000002 /* ColoringImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000002 /* ColoringImage.swift */; };
-		A10000000000000000000003 /* ImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000003 /* ImageService.swift */; };
-		A10000000000000000000004 /* PrintService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000004 /* PrintService.swift */; };
-		A10000000000000000000005 /* ImageGalleryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000005 /* ImageGalleryViewModel.swift */; };
-		A10000000000000000000006 /* ImageGalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000006 /* ImageGalleryView.swift */; };
-		A10000000000000000000007 /* ImageDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000007 /* ImageDetailView.swift */; };
-		A10000000000000000000009 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000009 /* Assets.xcassets */; };
-		A10000000000000000000010 /* GenerateImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000010 /* GenerateImageView.swift */; };
-/* End PBXBuildFile section */
-
 /* Begin PBXFileReference section */
-		A20000000000000000000001 /* ColoringBookApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColoringBookApp.swift; sourceTree = "<group>"; };
-		A20000000000000000000002 /* ColoringImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColoringImage.swift; sourceTree = "<group>"; };
-		A20000000000000000000003 /* ImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageService.swift; sourceTree = "<group>"; };
-		A20000000000000000000004 /* PrintService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrintService.swift; sourceTree = "<group>"; };
-		A20000000000000000000005 /* ImageGalleryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageGalleryViewModel.swift; sourceTree = "<group>"; };
-		A20000000000000000000006 /* ImageGalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageGalleryView.swift; sourceTree = "<group>"; };
-		A20000000000000000000007 /* ImageDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDetailView.swift; sourceTree = "<group>"; };
-		A20000000000000000000009 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		A20000000000000000000010 /* GenerateImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateImageView.swift; sourceTree = "<group>"; };
 		A30000000000000000000001 /* ColoringBook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ColoringBook.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		26D792702F2E7783003919B0 /* ColoringBook */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = ColoringBook; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		A40000000000000000000001 /* Frameworks */ = {
@@ -45,25 +28,9 @@
 		A50000000000000000000001 = {
 			isa = PBXGroup;
 			children = (
-				A50000000000000000000002 /* ColoringBook */,
+				26D792702F2E7783003919B0 /* ColoringBook */,
 				A50000000000000000000003 /* Products */,
 			);
-			sourceTree = "<group>";
-		};
-		A50000000000000000000002 /* ColoringBook */ = {
-			isa = PBXGroup;
-			children = (
-				A20000000000000000000001 /* ColoringBookApp.swift */,
-				A20000000000000000000002 /* ColoringImage.swift */,
-				A20000000000000000000003 /* ImageService.swift */,
-				A20000000000000000000004 /* PrintService.swift */,
-				A20000000000000000000005 /* ImageGalleryViewModel.swift */,
-				A20000000000000000000006 /* ImageGalleryView.swift */,
-				A20000000000000000000007 /* ImageDetailView.swift */,
-				A20000000000000000000010 /* GenerateImageView.swift */,
-				A20000000000000000000009 /* Assets.xcassets */,
-			);
-			path = ColoringBook;
 			sourceTree = "<group>";
 		};
 		A50000000000000000000003 /* Products */ = {
@@ -88,6 +55,9 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				26D792702F2E7783003919B0 /* ColoringBook */,
 			);
 			name = ColoringBook;
 			productName = ColoringBook;
@@ -132,7 +102,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A10000000000000000000009 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -143,14 +112,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A10000000000000000000001 /* ColoringBookApp.swift in Sources */,
-				A10000000000000000000002 /* ColoringImage.swift in Sources */,
-				A10000000000000000000003 /* ImageService.swift in Sources */,
-				A10000000000000000000004 /* PrintService.swift in Sources */,
-				A10000000000000000000005 /* ImageGalleryViewModel.swift in Sources */,
-				A10000000000000000000006 /* ImageGalleryView.swift in Sources */,
-				A10000000000000000000007 /* ImageDetailView.swift in Sources */,
-				A10000000000000000000010 /* GenerateImageView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -289,7 +250,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Coloring Book";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -318,7 +279,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Coloring Book";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
