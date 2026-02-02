@@ -229,10 +229,12 @@ async def generate_image(request: GenerateImageRequest):
 
     try:
         # Generate image with gpt-image-1.5
+        # Using low quality for cost savings - sufficient for line art coloring pages
         response = await openai_client.images.generate(
             model="gpt-image-1.5",
             prompt=enhanced_prompt,
             size="1024x1536",  # Portrait orientation for coloring pages
+            quality="low",
             output_format="png",
             n=1,
         )
