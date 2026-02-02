@@ -19,6 +19,9 @@ final class ImageGalleryViewModel {
 
     let serverURL = URL(string: "https://coloringbook.brerum.com")!
 
+    // App token for generation endpoint - set COLORINGBOOK_APP_TOKEN on server to enable
+    private let appToken: String? = "615876350d4b55b928797ffd82f4b39d204472e7e030a7a30df0a84a31550a51"
+
     func loadImages() async {
         isLoading = true
         errorMessage = nil
@@ -39,7 +42,7 @@ final class ImageGalleryViewModel {
             lastGeneratedImage = nil
 
             do {
-                let newImage = try await imageService.generateImage(prompt: prompt, baseURL: serverURL)
+                let newImage = try await imageService.generateImage(prompt: prompt, baseURL: serverURL, apiKey: appToken)
                 try Task.checkCancellation()
                 images.insert(newImage, at: 0)  // Add to beginning (newest first)
                 lastGeneratedImage = newImage

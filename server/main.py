@@ -10,7 +10,7 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, Header, HTTPException, Query
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
@@ -22,16 +22,20 @@ from PIL import Image
 # Use AsyncOpenAI to avoid blocking the event loop during image generation
 openai_client = AsyncOpenAI()
 
+# App token for protecting expensive endpoints (optional - if not set, endpoint is open)
+APP_TOKEN = os.environ.get("COLORINGBOOK_APP_TOKEN", "")
+
 app = FastAPI(
     title="Coloring Book API",
     description="API for browsing and serving coloring images",
     version="1.0.0"
 )
 
-# CORS middleware for iOS app access
+# CORS middleware - restricted since iOS native app doesn't need CORS
+# Add specific origins here if you need web browser access
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -208,8 +212,13 @@ async def search_images(q: str = Query(..., min_length=1, description="Search qu
 
 
 @app.post("/api/generate", response_model=GenerateImageResponse)
-async def generate_image(request: GenerateImageRequest):
+async def generate_image(
+    request: GenerateImageRequest,
+    x_app_token: str = Header(None)
+):
     """Generate a new coloring image using DALL-E 3."""
+    if APP_TOKEN and x_app_token != APP_TOKEN:
+        raise HTTPException(status_code=401, detail="Unauthorized")
     if not request.prompt.strip():
         raise HTTPException(status_code=400, detail="Prompt cannot be empty")
 

@@ -27,12 +27,15 @@ actor ImageService {
     }
 
     /// Generates a new coloring image
-    func generateImage(prompt: String, baseURL: URL) async throws -> ColoringImage {
+    func generateImage(prompt: String, baseURL: URL, apiKey: String?) async throws -> ColoringImage {
         let url = baseURL.appendingPathComponent("api/generate")
 
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        if let apiKey {
+            request.setValue(apiKey, forHTTPHeaderField: "X-App-Token")
+        }
 
         let body = GenerateImageRequest(prompt: prompt)
         request.httpBody = try JSONEncoder().encode(body)
