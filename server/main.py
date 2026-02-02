@@ -233,7 +233,7 @@ async def generate_image(request: GenerateImageRequest):
         response = await openai_client.images.generate(
             model="gpt-image-1.5",
             prompt=enhanced_prompt,
-            size="1024x1536",  # Portrait orientation for coloring pages
+            size="1024x1024",  # Square format for cost savings
             quality="low",
             output_format="png",
             n=1,
