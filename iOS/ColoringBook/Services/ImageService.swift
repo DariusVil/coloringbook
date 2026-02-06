@@ -1,7 +1,7 @@
 import Foundation
 
 /// Service for fetching coloring images from the API
-actor ImageService {
+actor ImageService: ImageServiceProtocol {
     private let session: URLSession
 
     init(session: URLSession = .shared) {

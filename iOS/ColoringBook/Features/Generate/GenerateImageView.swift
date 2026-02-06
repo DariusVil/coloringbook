@@ -2,16 +2,25 @@ import SwiftUI
 
 /// Modal view for generating new coloring images
 struct GenerateImageView: View {
-    @Bindable var viewModel: ImageGalleryViewModel
+    @State private var viewModel: GenerateImageViewModel
     @Environment(\.dismiss) private var dismiss
-    @State private var prompt = ""
     @State private var didStartGenerating = false
+
+    var onImageGenerated: ((ColoringImage) -> Void)?
+
+    init(
+        viewModel: GenerateImageViewModel = GenerateImageViewModel(),
+        onImageGenerated: ((ColoringImage) -> Void)? = nil
+    ) {
+        _viewModel = State(initialValue: viewModel)
+        self.onImageGenerated = onImageGenerated
+    }
 
     var body: some View {
         NavigationStack {
             Group {
                 if viewModel.isGenerating {
-                    GeneratingProgressView(prompt: prompt)
+                    GeneratingProgressView(prompt: viewModel.prompt)
                 } else {
                     formContent
                 }
@@ -32,7 +41,8 @@ struct GenerateImageView: View {
             .onChange(of: viewModel.isGenerating) { wasGenerating, isGenerating in
                 if wasGenerating && !isGenerating && didStartGenerating {
                     // Generation finished
-                    if viewModel.errorMessage == nil {
+                    if viewModel.errorMessage == nil, let newImage = viewModel.lastGeneratedImage {
+                        onImageGenerated?(newImage)
                         dismiss()
                     }
                 }
@@ -46,7 +56,7 @@ struct GenerateImageView: View {
     private var formContent: some View {
         Form {
             Section {
-                TextField("Describe the image...", text: $prompt, axis: .vertical)
+                TextField("Describe the image...", text: $viewModel.prompt, axis: .vertical)
                     .lineLimit(3...6)
             } header: {
                 Text("What would you like to color?")
@@ -56,7 +66,7 @@ struct GenerateImageView: View {
 
             Section {
                 Button {
-                    viewModel.generateImage(prompt: prompt)
+                    viewModel.generateImage()
                 } label: {
                     HStack {
                         Spacer()
@@ -64,7 +74,7 @@ struct GenerateImageView: View {
                         Spacer()
                     }
                 }
-                .disabled(prompt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                .disabled(!viewModel.canGenerate)
             }
 
             if let error = viewModel.errorMessage {
@@ -173,5 +183,5 @@ private struct GeneratingProgressView: View {
 }
 
 #Preview {
-    GenerateImageView(viewModel: ImageGalleryViewModel())
+    GenerateImageView()
 }

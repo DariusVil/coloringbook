@@ -3,15 +3,14 @@ import UIKit
 
 /// Full-screen view of a single coloring image with print capability
 struct ImageDetailView: View {
-    let image: ColoringImage
-    let baseURL: URL
-
+    @State private var viewModel: ImageDetailViewModel
     @Environment(\.colorScheme) private var colorScheme
     @State private var scale: CGFloat = 1.0
     @State private var lastScale: CGFloat = 1.0
-    @State private var loadedImage: UIImage?
-    @State private var loadError = false
-    @State private var showingPrintError = false
+
+    init(image: ColoringImage, baseURL: URL) {
+        _viewModel = State(initialValue: ImageDetailViewModel(image: image, baseURL: baseURL))
+    }
 
     var body: some View {
         ZStack {
@@ -37,16 +36,19 @@ struct ImageDetailView: View {
                     .padding(.bottom, 32)
             }
         }
-        .navigationTitle(image.title)
+        .navigationTitle(viewModel.image.title)
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(.ultraThinMaterial, for: .navigationBar)
-        .alert("Print Unavailable", isPresented: $showingPrintError) {
+        .alert("Print Unavailable", isPresented: Binding(
+            get: { viewModel.showingPrintError },
+            set: { _ in viewModel.dismissPrintError() }
+        )) {
             Button("OK", role: .cancel) {}
         } message: {
             Text("Printing is not available on this device.")
         }
         .task {
-            await loadImage()
+            await viewModel.loadImage()
         }
     }
 
@@ -63,7 +65,7 @@ struct ImageDetailView: View {
     @ViewBuilder
     private func imageContent(in geometry: GeometryProxy) -> some View {
         Group {
-            if let uiImage = loadedImage {
+            if let uiImage = viewModel.loadedImage {
                 // Image card
                 Image(uiImage: uiImage)
                     .resizable()
@@ -85,7 +87,7 @@ struct ImageDetailView: View {
                             scale = scale > 1.0 ? 1.0 : 2.0
                         }
                     }
-            } else if loadError {
+            } else if viewModel.loadError {
                 errorContent
                     .frame(width: geometry.size.width, height: geometry.size.height)
             } else {
@@ -130,7 +132,7 @@ struct ImageDetailView: View {
 
     private var printButton: some View {
         Button {
-            printCurrentImage()
+            viewModel.printCurrentImage()
         } label: {
             HStack(spacing: 10) {
                 Image(systemName: "printer.fill")
@@ -147,8 +149,8 @@ struct ImageDetailView: View {
                     .shadow(color: .purple.opacity(0.4), radius: 12, y: 6)
             }
         }
-        .opacity(loadedImage != nil && PrintService.isPrintingAvailable ? 1 : 0)
-        .animation(.easeInOut(duration: 0.2), value: loadedImage != nil)
+        .opacity(viewModel.loadedImage != nil && PrintService.isPrintingAvailable ? 1 : 0)
+        .animation(.easeInOut(duration: 0.2), value: viewModel.loadedImage != nil)
     }
 
     private var magnificationGesture: some Gesture {
@@ -167,35 +169,6 @@ struct ImageDetailView: View {
                     }
                 }
             }
-    }
-
-    private func loadImage() async {
-        guard let url = image.fullURL(baseURL: baseURL) else {
-            loadError = true
-            return
-        }
-
-        do {
-            let (data, _) = try await URLSession.shared.data(from: url)
-            if let uiImage = UIImage(data: data) {
-                loadedImage = uiImage
-            } else {
-                loadError = true
-            }
-        } catch {
-            loadError = true
-        }
-    }
-
-    private func printCurrentImage() {
-        guard let uiImage = loadedImage else {
-            showingPrintError = true
-            return
-        }
-
-        if !PrintService.printImage(uiImage, title: image.title) {
-            showingPrintError = true
-        }
     }
 }
 
